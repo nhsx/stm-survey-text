@@ -1,0 +1,7 @@
+"","text","word_scores","compound","pos","neu","neg","but_count","sentiment_sa$WordCount","sentiment_sa$SentimentGI","sentiment_sa$SentimentHE","sentiment_sa$SentimentLM","sentiment_sa$SentimentQDAP"
+"1","More therapy choices.","{0, 0, 0}",0,0,1,0,0,2,0,0,0,0
+"2","Sometimes the video conferences did not work, but I was happy to take the sessions by phone.","{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4.05, 0, 0, 0, 0, 0, 0}",0.723,0.24,0.76,0,1,8,0.25,0,0.125,0.25
+"3","Back to face to face when possible.","{0, 0, 0, 0, 0, 0, 0}",0,0,1,0,0,4,0.25,0,0,0
+"4","Female healthcare are rude and unsupportive. One in particular is unprofessional, and made me want to self-harm.","{0, 0, 0, -2, 0, 0, 0, 0, 0, 0, -2.3, 0, 0, 0, 0.3, 0, 0}",-0.718,0.06,0.648,0.292,0,10,-0.1,0,0,-0.2
+"5","Ideally a face to face consultation, however at these very difficult times that was impossible.","{1.8, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1.793, 0, 0, 0, 0}",0.002,0.151,0.699,0.15,0,8,0.125,-0.125,-0.125,0
+"6","We have struggled getting through on the mobile in the evening. We often try all the way from 6.30 to 7.30, the landline isn’t always any better.","{0, 0, -1.4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1.9}",0.128,0.096,0.825,0.079,0,11,-0.0909090909090909,0.0909090909090909,0.0909090909090909,0.0909090909090909
