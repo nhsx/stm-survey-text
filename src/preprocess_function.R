@@ -45,7 +45,7 @@ lemmatiser <- function(data, lemma = TRUE){
 }
 
 
-clean_text <- function(data, StopWords = mystopwords, mintermfreq=2, lemma = TRUE){
+clean_text <- function(data, StopWords = mystopwords, mintermfreq=2, lemma = TRUE, ngram = FALSE){
   #' Takes dataframe -> corpus with metadata.
   #' Cleans text: lowercase, expands contractions, removes digits and punctuation, 
   #' tokenises and remove stopwords.
@@ -91,12 +91,13 @@ clean_text <- function(data, StopWords = mystopwords, mintermfreq=2, lemma = TRU
 
 
 convert_to_stm <- function(dtm, docva){
-  #' takes column/list of text and creates document feature matrix (dfm) 
+  #' takes column/list of text and creates document feature matrix (dfm)
+  #' removes empty rows and filters docva dataframe to match dfm 
   #' convert to format for the stm package
-  #' returns stm formatted doc.
+  #' returns stm formatted data type.
   rowTotals <- apply(dtm , 1, sum) #Find the sum of words in each Document
   dtm.new   <- dtm[rowTotals> 0, ]
-  docva <- docva[rowTotals> 0, ] # Filter dataframe so that the dataframe matches
+  docva <- docva[rowTotals> 0, ] 
   dtm.new <- dfm(dtm.new)
   out <- convert(dtm.new, to = "stm", docvars = docva) 
   out <- prepDocuments(out$documents, out$vocab, out$meta)
