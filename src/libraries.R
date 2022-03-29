@@ -13,5 +13,6 @@ library(stringr) # version 1.4.0
 library(vader) # version 0.2.1
 
 library(stm) # version 1.3.6
+library(ggplot2) # version 3.3.5
 
 
