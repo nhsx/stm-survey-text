@@ -1,5 +1,6 @@
-source("./src/preprocess_function.R")
 source("./src/libraries.R")
+source("./src/preprocess_function.R")
+
 
 ### Load Data into R ####
 path <- "./data/text_data.csv"
