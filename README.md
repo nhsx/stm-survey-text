@@ -5,13 +5,18 @@ extraction from survey and free text responses.
 
 # Description
 
-TEXT WITH DESCRIPTION
+This repository holds code for the NHSX Analytics Unit PhD data science internship project on structural topic modelling for NHS survey data. This project focuses on using structural topic modelling (STM) to gain insight from free text responses to NHS surveys and their associated metadata. The code includes an exploration of pre-processing techniques and sentiment analysis tools to support STM and acquire information from the survey responses.
+
+The dataset used in the analysis is provided. It is originally from [Nottinghamshire Healthcare NHS Foundation Trust's CDU Data Science Team](https://github.com/CDU-data-science-team/pxtextmining)
 
 
-### Project Stucture
+### Project Structure
 
 - The main code is found in the `src` folder of the repository (see Usage below for more information)
+- The data used for in this analysis is found in the `data` folder of the repository
+- Exemplar outputs of this analysis is found in the `outputs` folder of the repository
 - The accompanying [report](./reports/report.pdf) is also available in the `reports` folder
+
 
 # Installation
 
@@ -25,7 +30,9 @@ The required packages are stored in `libraries.r`.  Currently `main.r` sources t
 
 # Running the code
 
-run `main.r`
+1. Run `main.r` to load and prepare the data for the STM model.  This includes text-preprocessing of the text (removing punctuation and digits, stemming, tokenisation etc.) and converting it to an stm data format. 
+2. Run `modelOutput.R` to run the STM on the data. The number of topics the model is to look for can be determined by the user in the file. This file will produce a series of outputs to evaluate and visualise the topics. 
+3. Run `ngrams.R` to load the raw data and produce data frames of words, bigrams and trigrams sorted by frequency. 
 
 # Roadmap
 
