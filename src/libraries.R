@@ -15,4 +15,6 @@ library(vader) # version 0.2.1
 library(stm) # version 1.3.6
 library(ggplot2) # version 3.3.5
 
-
+library(servr) #  version 0.2.4
+library(LDAvis) # version 0.3.2
+library(igraph) # version 1.2.6
