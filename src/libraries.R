@@ -1,3 +1,9 @@
+list.of.packages <- c("dplyr", "quanteda", "here", "tidyverse", "tibble", "tidyr",
+                      "tidytext", "textclean", "textstem", "stringr", "vader",
+                      "stm","ggplot2")
+new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
+if(length(new.packages)) install.packages(new.packages)
+
 library(dplyr)# version 1.0.6
 library(quanteda) # version: 3.0.0
 library(here) # version 1.0.1
