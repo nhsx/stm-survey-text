@@ -28,17 +28,19 @@ train_set <- data[-sample, ]
 
 
 ### Sentiment Analysis ####
-sentiment <- vader_df(train_set$feedback) 
+# Vader is used to perform sentiment analysis on the text. The can be run
+# and saved using the following code (commented out). This can take a long 
+# time, so the sentiment score has been saved and can be read in using the 
+# following # code. 
 
-train_set["Sentiment"] <- as.numeric(sentiment$compound)
+#sentiment <- vader_df(train_set$feedback) 
+#train_set["Sentiment"] <- as.numeric(sentiment$compound)
 
-write.csv(train_set, "./trainsetwithsentiment.csv")
+#write.csv(train_set, "./outputs/model outputs/trainsetwithsentiment.csv")
 
-#train_set <- read_csv("./trainsetwithsentiment.csv")
-
-# Filter comments to look at strong sentiment. 
-# To look at positive and negative comments only 
-dfa <- train_set[train_set$Sentiment > 0.05 | train_set$Sentiment < -0.05  ] 
+# Saved sentiment score. 
+train_set <- read_csv("./outputs/model outputs/trainsetwithsentiment.csv")
+train_set <- train_set[,c(2:10)] 
 
 ### Cleaning and pre-processing data ####
 

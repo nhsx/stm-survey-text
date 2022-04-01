@@ -12,7 +12,7 @@ text_length <- function(data) {
 
 
 
-prep_dataframe <- function(df){
+prep_dataframe <- function(df, filter_sent = FALSE){
   #' removes NAs and corrects data type. 
   df <- na.omit(df) 
   df$criticality[df$criticality < -4] <- -4
@@ -25,8 +25,16 @@ prep_dataframe <- function(df){
   df$organization <- as.factor(df$organization)
   df$question <- as.factor(df$question)
   df$criticality <- as.numeric(df$criticality)
+  df$Sentiment <- as.numeric(df$Sentiment)
+  
+  if (filter_sent == TRUE){
+    df <- df[(df$Sentiment > 0.05) | (df$Sentiment < -0.05),] 
+  } else {
+    df <- df
+  }
   return(df)
 }
+
 
 
 #stopwords
