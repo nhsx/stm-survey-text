@@ -65,3 +65,6 @@ tests/data/patient_patient-0_bundle.json
 # Development area
 my_dev
 .Rproj.user
+src/preprocessing.R
+.RData
+.Rhistory
