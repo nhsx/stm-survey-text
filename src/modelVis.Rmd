@@ -1,0 +1,116 @@
+---
+title: "stmOutputs"
+author: "A. Linton"
+date: "1 April 2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+# source()
+```
+
+
+This file allows you to visualise and compare multiple models selected in the modelSelection in an interactive dashboard. 
+Data will be taken from modelSelection.R and modelOutputs.R (to be moved to main.R). The latter sections of this document, allow you to search through the dataframe of labelled text. You can search for:
+- topics that contain the words inputted by the user
+- text that contains the terms inputted by the user.  
+
+## Visualise topics 
+- toldavis - toLDAvis displays an interactive dashboard showing the topics and the topic content. 
+- associated words
+- associated text
+```{r}
+#install.packages("svDialogs")
+# install.packages("shiny", type="binary")
+# install.packages("stminsights")
+# library("shiny")
+library("stminsights")
+library(svDialogs)
+library(stm)
+```
+
+
+
+```{r }
+toLDAvis(stm_df_fit, stmdata_$documents)
+sageLabels(stm_df_fit)
+findThoughts()
+```
+
+## Section: visualise effects
+
+Visualise the outputs of the model using stminsights. use_browser = FALSE results in a pop up interactive window instead of opening in a browser.
+
+After running run_stiminsights(), an interactive webpage will pop up. Here, load the saved .Rdata file produces from the file modelSelection.R. On the webpage you are able to view the topic contents, correlation, document distribution etc. 
+
+```{r, echo=FALSE}
+# visualise the outputs of the model using stminsights 
+run_stminsights(use_browser = FALSE)
+```
+
+
+
+## Filter data frame and visualise
+Finds topics that contain the words in the list. 
+
+```{r}
+readname <- function(prompttext) # prompt user for the name and number of the site
+{ 
+  n <- readline(prompt = prompttext)
+  return(n)
+}
+
+prjName <- readname("List of words (separate by a comma): ")
+print(prjName)
+```
+
+```{r}
+# split by comma --> list 
+findlist <- strsplit(prjName, ",")
+print(findlist[[1]])
+findTopic(stm_df_fit_, findlist[[1]]) # check function
+```
+
+## Text Search 
+This searches the feedback comments for that mention terms asked by the user/analyst. This is done through a user prompt that asks the user for the terms to look for in the text. The user can search for multiple terms. A dataframe of the rows for comments that mentions the terms is returned. There are 2 methods for the user prompt: via console or via pop up box. 
+Currently, this function is not set up for logical searches such as AND, OR and NOT. 
+
+```{r}
+searchtext <- function(df, terms){
+  
+  for (i in c(1:length(terms))){
+    rows <- grep(terms[[i]], df$feedback, ignore.case =TRUE)
+  }
+  
+  results <- df[rows,]
+  return(results)
+}
+
+```
+
+This method prompts the user in the console.
+
+```{r}
+searchterms <- readname("Terms to search for (separate by a comma):") 
+print(searchterms)
+searchterms <- strsplit(searchterms, ",")
+print(searchterms[[1]])
+```
+This method prompts the user using a pop up box. 
+
+```{r}
+user.input <- dlgInput("Terms to search for (separate by a comma):", Sys.info()["user"])$res
+# print(user.input)
+
+searchterms <- strsplit(user.input, ", ")
+print(searchterms[[1]])
+```
+
+```{r}
+
+viewdf <- searchtext(train_set[c(1:1000),], searchterms[[1]]) 
+View(viewdf)
+```
+
+

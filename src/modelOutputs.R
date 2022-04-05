@@ -1,5 +1,5 @@
-source("./src/Preprocessing/libraries.R")
-source("./src/Preprocessing/main.R")
+source("./src/libraries.R")
+source("./src/main.R")
 
 
 ### Run Model ####
