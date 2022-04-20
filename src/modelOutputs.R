@@ -91,6 +91,8 @@ stm_df[, "Top topic value"] <- apply(stm_df[, 2:16], 1, max)
 maxn <- function(n) function(x) order(x, decreasing = TRUE)[n]
 stm_df[, "Second topic value"] <- apply(stm_df[, 2:16], 1, function(x)x[maxn(2)(x)])
 
+label(data) = lapply(names(data), function(x) var.labels[match(x, names(var.labels))])
+
 #### Metadata effect  ####
 # Question
 stm_df_fit.effect <- estimateEffect(c(1:k) ~ question, stm_df_fit,stmdata$meta)
@@ -126,6 +128,8 @@ plot(stm_df_fit.effect, "criticality", model=stm_df_fit, method = "continuous", 
      ci.level = 0, topics = 1:k, xlab = "Criticality", main =  "Effect of criticality",
      family = "sans")
 
+# dataframe of effect estimates
+stminsights::get_effects(criticality9effect , "criticality", type= "pointestimate")
 
 # # Sentiment
 # stm_df_fit.effect <- estimateEffect(c(1:k) ~ Sentiment, stm_df_fit, stmdata$meta)

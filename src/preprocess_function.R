@@ -106,8 +106,8 @@ convert_to_stm <- function(dtm, docva){
   rowTotals <- apply(dtm , 1, sum) #Find the sum of words in each Document
   dtm.new   <- dtm[rowTotals> 0, ]
   docva <- docva[rowTotals> 0, ] 
-  dtm.new <- dfm(dtm.new)
-  out <- convert(dtm.new, to = "stm", docvars = docva) 
+  # dtm.new <- dfm(dtm.new)
+  out <- convert(dtm.new, to = "stm", docvars = docva)
   out <- prepDocuments(out$documents, out$vocab, out$meta)
   return(out)
 }

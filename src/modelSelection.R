@@ -2,8 +2,12 @@ source("./src/Preprocessing/libraries.R")
 source("./src/Preprocessing/main.R")
 
 ## Model Selection ####
-#' Using the processed data from main.R searckK function is used to 
-#' selction the model with the optimal number of topics. 
+#'  @description  Using the processed data from main.R searckK function is used to selction the model with the optimal number of topics.
+#' For stminsights you need to save:
+#'  out - a list of the data to produce the model (documents = , vocab = , meta = )
+#'  stm() - stm model
+#'  estimateEffects - the stm effects you would like to visualise.
+#' 
 
 set.seed(123)
 K <- c(5,10,15,20,25,30,35,40,45, 50, 55, 60, 65, 70)
@@ -11,6 +15,10 @@ system.time(kresult <- searchK(stmdata$documents, stmdata$vocab, K, data=stmdata
 plot(kresult)
 
 
+out <- list(documents = stmdata$documents,
+             vocab = stmdata$vocab,
+             meta = stmdata$meta)
+ 
 # Evaluating the best models
 model9<-stm(documents = stmdata$documents,
              vocab = stmdata$vocab,
@@ -20,6 +28,7 @@ model9<-stm(documents = stmdata$documents,
              init = "Spectral",
              max.em.its = 50,
              verbose=FALSE)
+
 
 model20 <-stm(documents = stmdata$documents,
               vocab = stmdata$vocab,
@@ -76,9 +85,15 @@ criticality44effect <- estimateEffect(c(1:44) ~ criticality, model44, stmdata$me
 sentiment44effect <- estimateEffect(c(1:44) ~ Sentiment, model44, stmdata$meta)
 
 
+# findThoughts(model9, texts = stmdata$meta$feedback)
+
+save.image('stm_modelselection3.RData')
 
 
-save.image('stm_modelselection.RData')
+library("stminsights")
+library(shiny)
+run_stminsights()
+
 
 M20ExSem<-as.data.frame(cbind(c(1:20),exclusivity(model20), 
                               semanticCoherence(model=model20, documents=stmdata$documents), "Mod20"))
@@ -102,3 +117,26 @@ plotexcoer<-ggplot(ModsExSem, aes(SemanticCoherence, Exclusivity, color = Model)
        y = "Exclusivity",
        title = "Comparing exclusivity and semantic coherence")
 plotexcoer
+
+
+
+## Dataframe of text, metadata, and topics. 
+
+# to get the topic number of the most and second most probable topic for each row
+labeldf <- function(model, data, k){
+  stmdf <- stm::make.dt(model, meta=data)
+  stmdf$`Most Probable Topic` <- apply(stmdf[,2:k], 1, function(x){ which(x == sort(x, decreasing = TRUE)[1])})
+  stmdf$`Second Most Probable Topic` <- apply(stmdf[,2:k], 1, function(x){ which(x == sort(x, decreasing = TRUE)[2])})
+  
+  return(stmdf)
+}
+
+stmdf9 <- labeldf(model9, stmdata$meta, 9)
+stmdf25 <- labeldf(model25, stmdata$meta, 25)
+stmdf44 <- labeldf(model44, stmdata$meta, 44)
+
+
+
+write.csv(stmdf9[, 11:ncol(stmdf9)], "./outputs/df9topics.csv")
+write.csv(stmdf25[, 27:ncol(stmdf25)], "./outputs/df25topics.csv")
+write.csv(stmdf44[, 46:ncol(stmdf44)], "./outputs/df44topics.csv")
