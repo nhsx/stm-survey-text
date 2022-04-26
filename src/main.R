@@ -31,16 +31,16 @@ train_set <- data[-sample, ]
 # Vader is used to perform sentiment analysis on the text. The can be run
 # and saved using the following code (commented out). This can take a long 
 # time, so the sentiment score has been saved and can be read in using the 
-# following # code. 
+# following code. 
 
-#sentiment <- vader_df(train_set$feedback) 
-#train_set["Sentiment"] <- as.numeric(sentiment$compound)
+sentiment <- vader_df(train_set$feedback)
+train_set["Sentiment"] <- as.numeric(sentiment$compound)
 
 #write.csv(train_set, "./outputs/model outputs/trainsetwithsentiment.csv")
 
 # Saved sentiment score. 
-train_set <- read_csv("./outputs/model outputs/trainsetwithsentiment.csv")
-train_set <- train_set[,c(2:10)] 
+# train_set <- read_csv("./outputs/model outputs/trainsetwithsentiment.csv")
+# train_set <- train_set[,c(2:10)] 
 
 ### Cleaning and pre-processing data ####
 
@@ -75,6 +75,9 @@ barplot(w,
 boxplot(w, xlab = "Number of Tokens", horizontal = TRUE, 
         main = "Boxplot of Number of Tokens per Document")
 
+
+# The data is processed and can be used with stm package. The model selection
+# is done using the modelSelection.R
 
 ### Run STM ####
 # Run model with processed data. 

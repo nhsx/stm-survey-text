@@ -1,6 +1,7 @@
+# Exploring the outputs that can be generated with the stm package. 
+
 source("./src/libraries.R")
 source("./src/main.R")
-
 
 ### Run Model ####
 k <- 9
@@ -14,6 +15,7 @@ stm_df_fit <- stm(documents = stmdata$documents,
                     verbose=FALSE)
 
 ### ### Model Evaluation and Visualisations ####
+
 ## Model Quality 
 # Semantic coherence 
 semcoh <- semanticCoherence(model=stm_df_fit, documents=stmdata$documents)
@@ -41,18 +43,18 @@ topics <- data.frame(t(topWords$prob))
 colnames(topics) <- paste0("topic", 1:ncol(topics))
 topics
 
-write.csv(topics, "./outputs/Topic Words.csv")
 
 # Save labels for the topics
 topiclabels <- sageLabels(stm_df_fit)
 topiclabels
 
-write.csv(topiclabels, "./outputs/Topic Labels.csv")
+
 
 
 ## Word Cloud 
 # of corpus 
 cloud(stm_df_fit)
+
 # of each topic
 par(mfrow=c(2,2))
 for (i in c(1:9)){
@@ -60,9 +62,12 @@ cloud(stm_df_fit,i, max.words = 100)
 }
 
 
-## Representative comments
+## Representative text 
+
+# representative text of a single topic
 thought <- findThoughts(stm_df_fit, texts = stmdata$meta$feedback, n=3, topics = 3)[[1]]
 
+# representative text of all the topics
 for (i in c(1:k)){
   
   thoughts <- findThoughts(stm_df_fit, texts = stmdata$meta$feedback,
@@ -80,18 +85,7 @@ topic.corr <- topicCorr(stm_df_fit, method="simple", cutoff = 0.1, verbose = TRU
 topic.corr
 plot(topic.corr)
 
-## Dataframe of text, metadata, and topics. 
-stm_df <- make.dt(sent_stm_df_fit, meta = sent_stmdata$meta) 
-# Add columns for first and second most prevalent topics in each doc
-stm_df[, "Top topic"] <- apply(stm_df[, 2:16], 1, which.max) 
-stm_df[, "Second topic"] <- apply(stm_df[, 2:16], 1, function(x){names(which(x == sort(x)[3]))[1]})
-stm_df[, "Second topic"]<- sub("Topic", "", stm_df$"Second topic")
 
-stm_df[, "Top topic value"] <- apply(stm_df[, 2:16], 1, max)
-maxn <- function(n) function(x) order(x, decreasing = TRUE)[n]
-stm_df[, "Second topic value"] <- apply(stm_df[, 2:16], 1, function(x)x[maxn(2)(x)])
-
-label(data) = lapply(names(data), function(x) var.labels[match(x, names(var.labels))])
 
 #### Metadata effect  ####
 # Question

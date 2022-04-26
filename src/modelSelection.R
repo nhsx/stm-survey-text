@@ -1,106 +1,118 @@
-source("./src/Preprocessing/libraries.R")
-source("./src/Preprocessing/main.R")
-
 ## Model Selection ####
-#'  @description  Using the processed data from main.R searckK function is used to selction the model with the optimal number of topics.
-#' For stminsights you need to save:
-#'  out - a list of the data to produce the model (documents = , vocab = , meta = )
-#'  stm() - stm model
-#'  estimateEffects - the stm effects you would like to visualise.
-#' 
+
+#' Using the processed data from main.R 
+#' Searck function is usedto selection the model with the optimal number of topics. 
+#' To visualise the models using stminsights, the following are included in the saved 
+#' file stm_modelselection.RData': 
+#'     out - a list of the data to produce the model (documents , vocab, meta)
+#'     stm model - stm model 
+#'     estimateEffects - the stm effects
+#'
+#' To compare the selected model the semantic coherence and exclusivity scores are compared.
+#'  
+#' The selected model is used to label the text with most and second most probable topics. 
+
+source("./src/libraries.R")
+source("./src/main.R")
+
 
 set.seed(123)
-K <- c(5,10,15,20,25,30,35,40,45, 50, 55, 60, 65, 70)
-system.time(kresult <- searchK(stmdata$documents, stmdata$vocab, K, data=stmdata$meta, max.em.its = 50))
+
+# Data used for stm 
+out <- list(documents = stmdata$documents,
+            vocab = stmdata$vocab,
+            meta = stmdata$meta)
+
+# searchK to find models with k number of topics that performs the best.
+K <- c(5,10,15,20,25,30,35,40,45,50)
+system.time(kresult <- searchK(out$documents, out$vocab, K, data=out$meta, max.em.its = 50))
 plot(kresult)
 
-
-out <- list(documents = stmdata$documents,
-             vocab = stmdata$vocab,
-             meta = stmdata$meta)
  
-# Evaluating the best models
-model9<-stm(documents = stmdata$documents,
-             vocab = stmdata$vocab,
-             data = stmdata$meta,
-             K = 9,
-             prevalence=~question+organization+criticality+Sentiment,
-             init = "Spectral",
-             max.em.its = 50,
-             verbose=FALSE)
+# Evaluating the best models but on k selected from searchk
 
-
-model20 <-stm(documents = stmdata$documents,
-              vocab = stmdata$vocab,
-              data = stmdata$meta,
+model20 <-stm(documents = out$documents,
+              vocab = out$vocab,
+              data = out$meta,
               K = 20,
               prevalence=~question+organization+criticality+Sentiment,
               init = "Spectral",
               max.em.its = 50,
               verbose=FALSE)
 
-model25<-stm(documents = stmdata$documents,
-             vocab = stmdata$vocab,
-             data = stmdata$meta,
+model25<-stm(documents = out$documents,
+             vocab = out$vocab,
+             data = out$meta,
              K = 25,
              prevalence=~question+organization+criticality+Sentiment,
              init = "Spectral",
              max.em.its = 50,
              verbose=FALSE)
 
-model30<-stm(documents = stmdata$documents,
-             vocab = stmdata$vocab,
-             data = stmdata$meta,
+model30<-stm(documents = out$documents,
+             vocab = out$vocab,
+             data = out$meta,
              K = 30,
              prevalence=~question+organization+criticality+Sentiment,
              init = "Spectral",
              max.em.its = 50,
              verbose=FALSE)
-model44<-stm(documents = stmdata$documents,
-            vocab = stmdata$vocab,
-            data = stmdata$meta,
-            K = 44,
-            prevalence=~question+organization+criticality+Sentiment,
-            init = "Spectral",
-            max.em.its = 50,
-            verbose=FALSE)
 
-library(stm)
 
-## model effects
-#9 topics
-question9effect <- estimateEffect(c(1:9) ~ question, model9, stmdata$meta)
-organisation9effect <- estimateEffect(c(1:9) ~ organization, model9, stmdata$meta)
-criticality9effect <- estimateEffect(c(1:9) ~ criticality, model9, stmdata$meta)
-sentiment9effect <- estimateEffect(c(1:9) ~ Sentiment, model9, stmdata$meta)
+
+## Find effect estimates for each model. 
+
+# 20 topics
+question20effect <- estimateEffect(c(1:20) ~ question, model25, out$meta)
+organisation20effect <- estimateEffect(c(1:20) ~ organization, model25, out$meta)
+criticality20effect <- estimateEffect(c(1:20) ~ criticality, model25, out$meta)
+sentiment20effect <- estimateEffect(c(1:20) ~ Sentiment, model25, out$meta)
+
 # 25 topics
-question25effect <- estimateEffect(c(1:25) ~ question, model25, stmdata$meta)
-organisation25effect <- estimateEffect(c(1:25) ~ organization, model25, stmdata$meta)
-criticality25effect <- estimateEffect(c(1:25) ~ criticality, model25, stmdata$meta)
-sentiment25effect <- estimateEffect(c(1:25) ~ Sentiment, model25, stmdata$meta)
-# 44 topics
-question44effect <- estimateEffect(c(1:44) ~ question, model44, stmdata$meta)
-organisation44effect <- estimateEffect(c(1:44) ~ organization, model44, stmdata$meta)
-criticality44effect <- estimateEffect(c(1:44) ~ criticality, model44, stmdata$meta)
-sentiment44effect <- estimateEffect(c(1:44) ~ Sentiment, model44, stmdata$meta)
+question25effect <- estimateEffect(c(1:25) ~ question, model25, out$meta)
+organisation25effect <- estimateEffect(c(1:25) ~ organization, model25, out$meta)
+criticality25effect <- estimateEffect(c(1:25) ~ criticality, model25, out$meta)
+sentiment25effect <- estimateEffect
+
+# 30 topics
+question25effect <- estimateEffect(c(1:30) ~ question, model25, out$meta)
+organisation25effect <- estimateEffect(c(1:30) ~ organization, model25, out$meta)
+criticality25effect <- estimateEffect(c(1:30) ~ criticality, model25, out$meta)
+sentiment25effect <- estimateEffect(c(1:30) ~ Sentiment, model25, out$meta)
 
 
-# findThoughts(model9, texts = stmdata$meta$feedback)
+## Save model and effect data
+save.image('./data/stm_modelselection.RData')
 
-save.image('stm_modelselection3.RData')
+
+# Visualise the outputs of the model using stminsights. use_browser = FALSE
+# results in a pop up interactive window instead of opening in a browser.
+#
+# In the interactive browser, load the saved .Rdata file produces from the file
+# modelSelection.R. On the webpage you are able to view the topic contents,
+# correlation, document distribution etc.
+
+run_stminsights() 
 
 
-library("stminsights")
-library(shiny)
-run_stminsights()
 
+### Plot semantic coherence vs exclusivity #### 
+# The semantic coherence score and exclisivity score the topics in each model
+# is plotted to compare the models'
+#performances.
 
 M20ExSem<-as.data.frame(cbind(c(1:20),exclusivity(model20), 
-                              semanticCoherence(model=model20, documents=stmdata$documents), "Mod20"))
+                              semanticCoherence(model=model20,
+                                                documents=out$documents),
+                              "Mod20"))
 M25ExSem<-as.data.frame(cbind(c(1:25),exclusivity(model25), 
-                              semanticCoherence(model=model25, documents=stmdata$documents), "Mod25"))
+                              semanticCoherence(model=model25,
+                                                documents=out$documents),
+                              "Mod25"))
 M30ExSem<-as.data.frame(cbind(c(1:30),exclusivity(model30), 
-                              semanticCoherence(model=model30,documents=stmdata$documents), "Mod30"))
+                              semanticCoherence(model=model30,
+                                                documents=out$documents),
+                              "Mod30"))
 
 ModsExSem<-rbind(M20ExSem, M25ExSem, M30ExSem)
 colnames(ModsExSem)<-c("K","Exclusivity", "SemanticCoherence", "Model")
@@ -110,17 +122,20 @@ ModsExSem$SemanticCoherence<-as.numeric(as.character(ModsExSem$SemanticCoherence
 
 options(repr.plot.width=7, repr.plot.height=7, repr.plot.res=100)
 
-#Plot semantic coherence vs exclusivity
-plotexcoer<-ggplot(ModsExSem, aes(SemanticCoherence, Exclusivity, color = Model))+geom_point(size = 2, alpha = 0.7) + 
-  geom_text(aes(label=K), nudge_x=.05, nudge_y=.05)+
+
+plotexcoer <-
+  ggplot(ModsExSem, aes(SemanticCoherence, Exclusivity, color = Model)) +
+  geom_point(size = 2, alpha = 0.7) +
+  geom_text(aes(label = K), nudge_x = .05, nudge_y = .05) +
   labs(x = "Semantic coherence",
        y = "Exclusivity",
        title = "Comparing exclusivity and semantic coherence")
+
 plotexcoer
 
 
 
-## Dataframe of text, metadata, and topics. 
+###  Dataframe of text with metadata, and labelled with topics. ####
 
 # to get the topic number of the most and second most probable topic for each row
 labeldf <- function(model, data, k){
@@ -131,12 +146,7 @@ labeldf <- function(model, data, k){
   return(stmdf)
 }
 
-stmdf9 <- labeldf(model9, stmdata$meta, 9)
-stmdf25 <- labeldf(model25, stmdata$meta, 25)
-stmdf44 <- labeldf(model44, stmdata$meta, 44)
 
+stmdf25 <- labeldf(model25, out$meta, 25)
+stmdf25 <- stmdf25[, 27:ncol(stmdf25)]
 
-
-write.csv(stmdf9[, 11:ncol(stmdf9)], "./outputs/df9topics.csv")
-write.csv(stmdf25[, 27:ncol(stmdf25)], "./outputs/df25topics.csv")
-write.csv(stmdf44[, 46:ncol(stmdf44)], "./outputs/df44topics.csv")

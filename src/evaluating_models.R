@@ -1,4 +1,6 @@
 #### EVALUATIONS #####
+# Comparing the effects of ngrams, sentiment and modified pre-processing. 
+
 source("./src/preprocess_function.R") # preprocessing functions
 source("./src/libraries.R")
 
