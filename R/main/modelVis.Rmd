@@ -1,0 +1,144 @@
+---
+title: "Visualisations_and_text_search"
+author: "Anna-Grace Linton"
+date: "1 April 2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo=FALSE, warning=FALSE, message=FALSE, cache=TRUE)
+```
+
+This file allows you to visualise and compare multiple models selected in the modelSelection in an interactive dashboard. 
+Data will be taken from modelSelection.R and modelOutputs.R . The latter sections of this document, allow you to search through the dataframe of labelled text. You can search for:
+- topics that contain the words inputted by the user
+- text that contains the terms inputted by the user.  
+
+```{r load-packages}
+library(knitr)
+source("~/nhsx/stmnhsx/R/main/libraries.R", local =  knitr::knit_global())
+# source("~/nhsx/stmnhsx/R/main/modelSelection.R", local = knitr::knit_global()) 
+```
+
+```{r, initalise-wordnet-dictionary}
+library(wordnet)
+initDict()
+setDict("C:/Program Files (x86)/WordNet/2.1/dict")
+Sys.setenv(WNHOME = "C:/Program Files (x86)/WordNet/2.1") 
+getDict()
+```
+
+```{r, functions-for-markdown}
+readname <- function(prompttext) # prompt user for the text 
+{ 
+  n <- readline(prompt = prompttext)
+  return(n)
+}
+
+
+# prompt user for search terms 
+searchtext <- function(df, terms){
+  
+  for (i in c(1:length(terms))){
+    rows <- grep(terms[[i]], df$feedback, ignore.case =TRUE)
+  }
+  
+  results <- df[rows,]
+  return(results)
+}
+
+# get similar words 
+extendTerms <- function (string){
+  extendterms <- list()
+  syn <- unlist(synonyms(string, "NOUN"))
+ 
+  for (el in syn){
+    if(el %in% stmdata$vocab){
+      extendterms[[length(extendterms) + 1]] <- el}
+  }
+  
+  return(unlist(extendterms))
+}
+
+```
+
+
+
+# Visualise topics 
+This code runs `toLDAvis` package and opens a visualisation of stm that allows the user to explore the topic/word distribution in an interactive browser. If the open.browser variable is missing, toLDA vis will lauch in R studios as an interactive plot. 
+```{r}
+stm::toLDAvis(mod = model25, docs = stmdata$documents, open.browser = interactive())
+```
+
+This code displays the topic labels for the topics usign sageLabels() function. This displays the real words (as opposed to the processed words) most associated with each topic. findThoughts() then displays the most representative texts for each topic. 
+```{r, Topic labels}
+sageLabels(model25)
+
+findThoughts(model25, stmdata$meta$feedback)
+```
+
+Using `findTopics` topics can be searched for a list of search terms specified by the user. This returns the number of topics and the topic that contains words in the list. 
+This method prompts the user using a pop up box. 
+
+```{r}
+user.input <- dlgInput("Terms to search for (separate by a comma):", Sys.info()["user"])$res
+
+findlist <- strsplit(user.input, ",")
+#print(findlist[[1]])
+findTopic(model25, findlist[[1]]) # check function
+```
+
+
+
+# Visualise effects
+`stminsights` can be used to visualise the topics, topic content and estimate effect. Using use_browser = FALSE results in a pop up interactive window instead of opening in a browser.
+
+After running run_stiminsights(), an interactive webpage will open in browser. Here, load the saved .Rdata file produces from the file modelSelection.R. On the webpage you are able to view the topic contents, correlation, document distribution etc. 
+
+```{r, echo=FALSE}
+# visualise the outputs of the model using stminsights 
+run_stminsights() 
+```
+
+
+
+#Text Search 
+This searches the feedback comments for that mention terms asked by the user/analyst. This is done through a user prompt that asks the user for the terms to look for in the text. The user can search for multiple terms. A dataframe of the rows for comments that mentions the terms is returned.  The labeled text that is search is `data_labeled` object from `modelSelection.R` file. 
+Currently, this function is not set up for logical searches such as AND, OR and NOT. 
+
+
+```{r}
+user.input <- dlgInput("Terms to search for (separate by a comma):", Sys.info()["user"])$res
+# print(user.input)
+
+searchterms <- strsplit(user.input, ", ")
+print(searchterms[[1]])
+```
+
+```{r}
+user.similar <- dlgInput("Would you like to look for similar words? (yes/no)", Sys.info()["user"])$res
+user.similar <- tolower(user.similar)
+
+if (user.similar == "yes"){
+  for (word in searchterms[[1]]){
+    sim <- extendTerms(word)
+    searchterms[[length(searchterms) + 1]] <- sim}
+} else {searchterms}
+
+```
+
+
+To view the resulting dataframe
+```{r}
+viewdf <- searchtext(data_labeled, searchterms[[1]]) 
+print(paste("There are", length(viewdf$feedback), "results for this search."))
+View(viewdf)
+```
+
+```{r, fig.show="hold"}
+print(paste("Most prevalent topic is Topic", names(which.max(table(viewdf$`Most Probable Topic`)))))
+
+barplot(table(viewdf$`Most Probable Topic`), main = "Count of most probable topic", xlab = "Topic", ylab = "Count")
+barplot(table(viewdf$`Second Most Probable Topic`), main = "Count of second most probable topic", xlab = "Topic", ylab = "Count")
+hist(viewdf$Sentiment, main= "Distribution of Sentiment")
+```

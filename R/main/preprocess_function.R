@@ -1,4 +1,4 @@
-source("./src/libraries.R")
+source("./R/main/libraries.R")
 
 
 text_length <- function(data) {
@@ -112,4 +112,23 @@ convert_to_stm <- function(dtm, docva){
   return(out)
 }
 
+
+sentAnalysis <- function(x, df){
+  #' @param x is the column with the column with the text
+  #' @param df is the dataframe to add sentiment labels to 
+  #' @description  Runs VADER sentiment analysis and labelled text
+  sentiment <- vader_df(x)
+  
+  # removes row with NAs
+  filteredsentiment <- na.omit(sentiment)
+  
+  newdataset1 <-df[-which(is.na(sentiment$compound)),]
+  
+  noRemoved <- length(sentiment$text) - length(filteredsentiment$text)
+  print(paste("The dataframe now contains", length(sentiment$text) ,"rows.", noRemoved, "rows have been removed."))
+  
+  newdataset1["sentiment"] <- as.numeric(filteredsentiment$compound)
+  
+  return(df)
+}
 

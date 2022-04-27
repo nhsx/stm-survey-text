@@ -28,18 +28,26 @@ train_set <- data[-sample, ]
 
 
 ### Sentiment Analysis ####
-# Vader is used to perform sentiment analysis on the text. The can be run
-# and saved using the following code (commented out). This can take a long 
-# time, so the sentiment score has been saved and can be read in using the 
-# following code. 
+# Vader is used to perform sentiment analysis on the text and adds a column to
+# the dataframe with the sentiment scores. The can be run and saved using the
+# following code. This can take a long time, so the sentiment score has been
+# saved and can be read in using the following code (commented out).
 
-sentiment <- vader_df(train_set$feedback)
-train_set["Sentiment"] <- as.numeric(sentiment$compound)
+train_set <- sentAnalysis(train_set$feedback, train_set)
 
-#write.csv(train_set, "./outputs/model outputs/trainsetwithsentiment.csv")
+# sentiment <- vader_df(train_set$feedback)
+# # remove row if NA or Error in word_scores
+# 
+# filteredsentiment <- na.omit(sentiment)
+# noRemoved <- length(sentiment$text) - length(filteredsentiment$text)
+
+# print(paste("The dataframe now contains", length(sentiment$text) ,"rows.", noRemoved, "rows have been removed."))
+# train_set["Sentiment"] <- as.numeric(filteredsentiment$compound)
+
+write.csv(train_set, "./data/trainsetwithsentiment.csv")
 
 # Saved sentiment score. 
-# train_set <- read_csv("./outputs/model outputs/trainsetwithsentiment.csv")
+# train_set <- read_csv("./data/trainsetwithsentiment.csv")
 # train_set <- train_set[,c(2:10)] 
 
 ### Cleaning and pre-processing data ####
@@ -77,7 +85,7 @@ boxplot(w, xlab = "Number of Tokens", horizontal = TRUE,
 
 
 # The data is processed and can be used with stm package. The model selection
-# is done using the modelSelection.R
+# is done using the modelSelection.
 
 ### Run STM ####
 # Run model with processed data. 

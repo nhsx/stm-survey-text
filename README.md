@@ -12,10 +12,10 @@ The dataset used in the analysis is provided. It is originally from [Nottinghams
 
 ### Project Structure
 
-- The main code is found in the `src` folder of the repository (see Usage below for more information)
-- The data used for in this analysis is found in the `data` folder of the repository
-- Exemplar outputs of this analysis is found in the `outputs` folder of the repository
-- The accompanying [report](./reports/report.pdf) is also available in the `reports` folder
+- The project code is found in the `R` folder of the repository (see Usage below for more information).
+- The data used for in this analysis is found in the `data` folder of the repository.
+- Exemplar outputs of this analysis is found in the `outputs` folder of the repository.
+- The accompanying [report](./reports/report.pdf) is also available in the `reports` folder.
 
 
 # Installation
@@ -29,10 +29,14 @@ Launch the `stmnhsx.Rproj` file in a suitable IDE (e.g. RStudio).
 The required packages are stored in `libraries.r`.  Currently `main.r` sources this module and will automatically install any missing packages!
 
 # Running the code
+The folder [`main`](./R/main/) contains the core code for the stm analysis and visualisation. The folder [`experiments`](./R/experiments/) contains exploratory code used in additonal experiments in this project. To run the main code:
+1. Run `preprocess.R` to load and prepare the data for the STM model.  This includes text-preprocessing of the text (removing punctuation and digits, stemming, tokenisation etc.), sentiment analysis and converting it to an stm data format. 
+2. Run `modelSelection.R ` to run the STM on the data and determine the model with the best performance on the data. The number of topics the model is to look for can be determined by the user in the file. This file will series of outputs to evaluate the models. 
+3. Run `modelVis.Rmd` to further visualise a model interactively and conduct text search on the labeled data. 
 
-1. Run `main.r` to load and prepare the data for the STM model.  This includes text-preprocessing of the text (removing punctuation and digits, stemming, tokenisation etc.) and converting it to an stm data format. 
-2. Run `modelOutput.R` to run the STM on the data. The number of topics the model is to look for can be determined by the user in the file. This file will produce a series of outputs to evaluate and visualise the topics. 
-3. Run `ngrams.R` to load the raw data and produce data frames of words, bigrams and trigrams sorted by frequency. 
+## Running additional experiments
+- Run `modelOutput.R` to run the STM on the data.  This file will produce a series of outputs using stm package to visualise the topics and metadata effects. This uses the processed data from `preprocess.R`.
+- Run `ngrams.R` to load the raw data and produce data frames of words, bigrams and trigrams sorted by frequency. 
 
 # Roadmap
 

@@ -1,19 +1,20 @@
 ## Model Selection ####
 
 #' Using the processed data from main.R 
-#' Searck function is usedto selection the model with the optimal number of topics. 
+#' Searchk function is usedto selection the model with the optimal number of topics. 
 #' To visualise the models using stminsights, the following are included in the saved 
 #' file stm_modelselection.RData': 
 #'     out - a list of the data to produce the model (documents , vocab, meta)
 #'     stm model - stm model 
 #'     estimateEffects - the stm effects
+#'  runinsights() is generates an interactive dashboard in browser to visualise stm outputs. 
 #'
-#' To compare the selected model the semantic coherence and exclusivity scores are compared.
+#' To compare the selected model the semantic coherence and exclusivity scores are plotted.
 #'  
 #' The selected model is used to label the text with most and second most probable topics. 
 
-source("./src/libraries.R")
-source("./src/main.R")
+source("./R/main/libraries.R")
+source("./R/main/preprocess.R")
 
 
 set.seed(123)
@@ -63,10 +64,10 @@ model30<-stm(documents = out$documents,
 ## Find effect estimates for each model. 
 
 # 20 topics
-question20effect <- estimateEffect(c(1:20) ~ question, model25, out$meta)
-organisation20effect <- estimateEffect(c(1:20) ~ organization, model25, out$meta)
-criticality20effect <- estimateEffect(c(1:20) ~ criticality, model25, out$meta)
-sentiment20effect <- estimateEffect(c(1:20) ~ Sentiment, model25, out$meta)
+question20effect <- estimateEffect(c(1:20) ~ question, model20, out$meta)
+organisation20effect <- estimateEffect(c(1:20) ~ organization, model20, out$meta)
+criticality20effect <- estimateEffect(c(1:20) ~ criticality, model20, out$meta)
+sentiment20effect <- estimateEffect(c(1:20) ~ Sentiment, model20, out$meta)
 
 # 25 topics
 question25effect <- estimateEffect(c(1:25) ~ question, model25, out$meta)
@@ -75,10 +76,10 @@ criticality25effect <- estimateEffect(c(1:25) ~ criticality, model25, out$meta)
 sentiment25effect <- estimateEffect
 
 # 30 topics
-question25effect <- estimateEffect(c(1:30) ~ question, model25, out$meta)
-organisation25effect <- estimateEffect(c(1:30) ~ organization, model25, out$meta)
-criticality25effect <- estimateEffect(c(1:30) ~ criticality, model25, out$meta)
-sentiment25effect <- estimateEffect(c(1:30) ~ Sentiment, model25, out$meta)
+question25effect <- estimateEffect(c(1:30) ~ question, model30, out$meta)
+organisation25effect <- estimateEffect(c(1:30) ~ organization, model30, out$meta)
+criticality25effect <- estimateEffect(c(1:30) ~ criticality, model30, out$meta)
+sentiment25effect <- estimateEffect(c(1:30) ~ Sentiment, model30, out$meta)
 
 
 ## Save model and effect data
@@ -140,13 +141,15 @@ plotexcoer
 # to get the topic number of the most and second most probable topic for each row
 labeldf <- function(model, data, k){
   stmdf <- stm::make.dt(model, meta=data)
-  stmdf$`Most Probable Topic` <- apply(stmdf[,2:k], 1, function(x){ which(x == sort(x, decreasing = TRUE)[1])})
-  stmdf$`Second Most Probable Topic` <- apply(stmdf[,2:k], 1, function(x){ which(x == sort(x, decreasing = TRUE)[2])})
+  stmdf$`Most Probable Topic` <- apply(stmdf[,2:k], 1, 
+                                       function(x){ which(x == sort(x, decreasing = TRUE)[1])})
+  stmdf$`Second Most Probable Topic` <- apply(stmdf[,2:k], 1,
+                                              function(x){ which(x == sort(x, decreasing = TRUE)[2])})
   
   return(stmdf)
 }
 
 
-stmdf25 <- labeldf(model25, out$meta, 25)
-stmdf25 <- stmdf25[, 27:ncol(stmdf25)]
+data_labeled <- labeldf(model25, out$meta, 25)
+data_labeled <- data_labeled[, 27:ncol(data_labeled)]
 

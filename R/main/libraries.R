@@ -1,6 +1,6 @@
 list.of.packages <- c("dplyr", "quanteda", "here", "tidyverse", "tibble", "tidyr",
                       "tidytext", "textclean", "textstem", "stringr", "vader",
-                      "stm","ggplot2", "LDAvis", "servr", "igraph")
+                      "stm","ggplot2", "LDAvis", "servr", "igraph", "stminsights", "svDialogs")
 new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
 if(length(new.packages)) install.packages(new.packages)
 
@@ -24,3 +24,6 @@ library(ggplot2) # version 3.3.5
 library(servr) #  version 0.2.4
 library(LDAvis) # version 0.3.2
 library(igraph) # version 1.2.6
+
+library(stminsights)  # version 0.4.1
+library(svDialogs)  # version 1.0.3

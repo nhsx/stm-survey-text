@@ -25,9 +25,9 @@ getFilterTypes()
 # get term --> get synonyms as list 
 # option to expand search terms with synonyms 
 # text search 
-
 ## repeat with synsets
 ## compare results
+
 # ! - antonym, @ - hypernym, & - similar(adjectives only) ~ - hyponym
 
 
@@ -37,8 +37,9 @@ filter <- getTermFilter("ExactMatchFilter", "company", TRUE)
 terms <- getIndexTerms("NOUN", 1, filter)
 getSynonyms(terms[[1]])
 
+
 # option b
-syn <- synonyms("wife", "NOUN")
+syn <- synonyms("spouse", "NOUN")
 
 extendterms <-list()
 #list of synonyms in vocab
@@ -48,6 +49,30 @@ for (el in syn){
     extendterms[[length(extendterms) + 1]] <- el}
 }
 
+## list of words 
+
+extendTerms <- function (string){
+  synonymlist <- list()
+  
+  for (i in string){
+  # print(i)
+  #print(synonyms(i, "NOUN"))
+    syn <- unlist(synonyms(i, "NOUN"))
+    synonymlist[[length(synonymlist) + 1]] <- syn}
+  
+  print(paste("synonyms", "i", synonymlist))
+  extendterms <-list()
+  
+  for (el in synonymlist){
+    if(el %in% stmdata$vocab){
+      print(el)
+      extendterms[[length(extendterms) + 1]] <- el}
+  }
+  return(extendterms)
+}
+
+
+extendTerms(teststring)
 
 searchtext <- function(df, terms){
   
@@ -63,24 +88,26 @@ searchtext <- function(df, terms){
 tempdf <- searchtext(data, extendterms)
 
 
+teststring <- c("staff", "spouse", "cancer")
 # for a list of words
 results <- list()
 for (i in teststring){
   # print(i)
-  print(synonyms(i, "NOUN")[c(1:3)])
+  print(synonyms(i, "NOUN"))
   
 }
 
 
 ## get similar words - often producing empty lists
 # try finding hypernym and then hyponyms 
-filter <- getTermFilter("ExactMatchFilter", "asthma", TRUE)
+filter <- getTermFilter("ExactMatchFilter", "spouse", TRUE)
 terms <- getIndexTerms("NOUN", 1, filter)
 synsets <- getSynsets(terms[[1]])
 related <- getRelatedSynsets(synsets[[1]], "@")
 sapply(related, getWord)
 
-related2 <- getRelatedSynsets(related[[1]], "~")
+
+related2 <- getRelatedSynsets(related[[2]], "~")
 sapply(related2, getWord)
 similar <- unlist(sapply(related2, getWord))
 
