@@ -1,9 +1,13 @@
-# Exploring the outputs that can be generated with the stm package. 
+#' Exploring the outputs that can be generated with the stm package. 
+#' A specified model can be run here or alternatively, a model run 
+#' and selected from `modelSelection.R`.
+#' 
 
 source("./src/libraries.R")
 source("./src/main.R")
 
-### Run Model ####
+# Run Model ####
+# Run specified model
 k <- 9
 stm_df_fit <- stm(documents = stmdata$documents,
                     vocab = stmdata$vocab,
@@ -14,7 +18,10 @@ stm_df_fit <- stm(documents = stmdata$documents,
                     max.em.its = 50,
                     verbose=FALSE)
 
-### ### Model Evaluation and Visualisations ####
+# Run a model from `modelSelection.R`
+#stm_df_fit <- model25
+
+# Model Evaluation and Visualisations ####
 
 ## Model Quality 
 # Semantic coherence 
@@ -87,12 +94,11 @@ plot(topic.corr)
 
 
 
-#### Metadata effect  ####
+# Metadata effect  ####
 # Question
 stm_df_fit.effect <- estimateEffect(c(1:k) ~ question, stm_df_fit,stmdata$meta)
 summary(stm_df_fit.effect)
-write.csv(capture.output(summary(stm_df_fit.effect)), "./outputs/question_effect.csv")
-          
+
 plot(stm_df_fit.effect, "question", model=stm_df_fit, method="difference", verbose.labels =F,
      cov.value1 = "1", cov.value2 = "2", xlab = "  Q1 ........................... Q2",
      topics = 1:k, printlegend=T, main= "Effect of Question")
@@ -100,7 +106,6 @@ plot(stm_df_fit.effect, "question", model=stm_df_fit, method="difference", verbo
 
 stm_df_fit.effect <- estimateEffect(c(1:k) ~ organization, stm_df_fit,stmdata$meta)
 summary(stm_df_fit.effect)
-write.csv(capture.output(summary(stm_df_fit.effect)), "./outputs/organization_effect.csv")
 
 # Organisation
 plot(stm_df_fit.effect, "organization", model=stm_df_fit, method="difference", verbose.labels =F,
@@ -116,7 +121,6 @@ plot(stm_df_fit.effect, "organization", model=stm_df_fit, method="difference", v
 # Criticality 
 stm_df_fit.effect <- estimateEffect(c(1:k) ~ criticality, stm_df_fit, stmdata$meta)
 summary(stm_df_fit.effect)
-write.csv(capture.output(summary(stm_df_fit.effect)), "./outputs/criticality_effect.csv")
 
 plot(stm_df_fit.effect, "criticality", model=stm_df_fit, method = "continuous", printlegend = TRUE,
      ci.level = 0, topics = 1:k, xlab = "Criticality", main =  "Effect of criticality",
@@ -126,22 +130,21 @@ plot(stm_df_fit.effect, "criticality", model=stm_df_fit, method = "continuous", 
 stminsights::get_effects(criticality9effect , "criticality", type= "pointestimate")
 
 # # Sentiment
-# stm_df_fit.effect <- estimateEffect(c(1:k) ~ Sentiment, stm_df_fit, stmdata$meta)
-# summary(stm_df_fit.effect)
-# write.csv(capture.output(summary(stm_df_fit.effect)), "./outputs/sentiment_effect.csv")
-# plot(stm_df_fit.effect, "Sentiment", model=stm_df_fit, method = "continuous", printlegend = TRUE,
-#      ci.level = 0, topics = 1:k, xlab = "Sentiment", main =  "Effect of Sentiment",
-#      family = "sans")
-# 
-# plot(stm_df_fit.effect, "Sentiment", model=stm_df_fit, method = "difference", printlegend = TRUE,
-#      ci.level = 0, topics = 1:k, xlab = "Sentiment", main =  "Effect of Sentiment",
-#      family = "sans", cov.value1 = -1, cov.value2 =1)
-# 
-# plot(stm_df_fit.effect, "Sentiment", model=stm_df_fit, method="difference",
-#      verbose.labels =F,
-#      cov.value1 = "-1", cov.value2 = "1", 
-#      xlab = "Sentiment",
-#      topics = 1:k, printlegend=T, main= "Effect of Sentiment")
+stm_df_fit.effect <- estimateEffect(c(1:k) ~ Sentiment, stm_df_fit, stmdata$meta)
+summary(stm_df_fit.effect)
+plot(stm_df_fit.effect, "Sentiment", model=stm_df_fit, method = "continuous", printlegend = TRUE,
+     ci.level = 0, topics = 1:k, xlab = "Sentiment", main =  "Effect of Sentiment",
+     family = "sans")
+
+plot(stm_df_fit.effect, "Sentiment", model=stm_df_fit, method = "difference", printlegend = TRUE,
+     ci.level = 0, topics = 1:k, xlab = "Sentiment", main =  "Effect of Sentiment",
+     family = "sans", cov.value1 = -1, cov.value2 =1)
+
+plot(stm_df_fit.effect, "Sentiment", model=stm_df_fit, method="difference",
+     verbose.labels =F,
+     cov.value1 = "-1", cov.value2 = "1",
+     xlab = "Sentiment",
+     topics = 1:k, printlegend=T, main= "Effect of Sentiment")
 
 
 # Plot perspective - compare two topics 

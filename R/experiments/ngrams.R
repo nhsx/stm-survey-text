@@ -1,14 +1,7 @@
-### N-gram analysis of Family and friends 
+### N-gram analysis of the raw data ####
+
 source("./src/preprocess_function.R")
 source("./src/main.R")
-
-library("dplyr")
-library("tidytext")
-library("tibble")
-library("tidyr")
-library("here")
-library("igraph")
-library("ggraph")
 
 # datadf <- read.csv("./data/text_data.csv")
 datadf <- read.csv("./data/text_data.csv")
@@ -23,8 +16,6 @@ df <- tibble(text=text)
 data_words <- df %>% unnest_tokens(words, text, token = "words") %>% 
   filter(!words %in% stop_words$word) %>%count(words, sort=TRUE)
 
-write.csv(data_words, "words_count.csv")
-
 # Calculate bigram frequency 
 data_bigrams <- df %>%
   unnest_tokens(bigram, text, token = "ngrams", n = 2) %>%
@@ -37,7 +28,6 @@ data_bigrams <- df %>%
 bigrams_freq <- data_bigrams %>% unite(bigram, word1, word2, sep=" ") %>%
   count(bigram, sort=TRUE)
 
-write.csv(data_bigrams,"bigram_count.csv")
 
 # Calculate trigram frequency
 data_trigrams <- df %>%
@@ -51,8 +41,6 @@ data_trigrams <- df %>%
   filter(!is.na(word3)) %>% 
   unite(trigram, word1, word2, word3, sep=" ") %>%
   count(trigram, sort=TRUE)
-
-write.csv(data_trigrams, "trigram_count.csv")
 
 
 
@@ -69,50 +57,3 @@ ggraph(bigram_graph, layout = "fr") +
   geom_node_text(aes(label = name), vjust = 1, hjust = 1)
 
 
-
-
-### Ngram after processing 
-text_cleaned <- clean_text(df)
-
-text_cleaned$Tokens
-
-
-
-tokens_skipgrams(text_cleaned$Tokens, n = 3, skip = 0:1, concatenator = " ")
-tokens_skipgrams(text_cleaned$Tokens, n = 2, skip = 0:1, concatenator = " ")
-count(tokens_skipgrams(text_cleaned$Tokens, n = 2, skip = 0:1, concatenator = " "),
-      bigram, sort=TRUE)
-
-data_bigrams <- df %>%
-  unnest_tokens(bigram, text, token = "ngrams", n = 2) %>%
-  separate(bigram, c("word1", "word2"), sep = " ") %>%
-  filter(!word1 %in% stop_words$word) %>%
-  filter(!word2 %in% stop_words$word) %>%
-  filter(!is.na(word1)) %>% 
-  filter(!is.na(word2)) %>% 
-  unite(bigram, word1, word2, sep=" ") %>%
-  count(bigram, sort=TRUE)
-
-write.csv(data_bigrams,"bigram_count.csv")
-
-data_trigrams <- df %>%
-  unnest_tokens(trigram, text, token = "ngrams", n = 3) %>%
-  separate(trigram, c("word1", "word2", "word3"), sep = " ") %>%
-  filter(!word1 %in% stop_words$word) %>%
-  filter(!word2 %in% stop_words$word) %>%
-  filter(!word3 %in% stop_words$word) %>%
-  filter(!is.na(word1)) %>% 
-  filter(!is.na(word2)) %>% 
-  filter(!is.na(word3)) %>% 
-  unite(trigram, word1, word2, word3, sep=" ") %>%
-  count(trigram, sort=TRUE)
-
-write.csv(data_trigrams, "trigram_count.csv")
-
-data_words <- df %>% unnest_tokens(words, text, token = "words") %>% 
-  filter(!words %in% stop_words$word) %>%count(words, sort=TRUE)
-
-write.csv(data_words, "words_count.csv")
-
-
-sessionInfo()

@@ -215,13 +215,6 @@ ModsExSem$Exclusivity<-as.numeric(as.character(ModsExSem$Exclusivity))
 ModsExSem$SemanticCoherence<-as.numeric(as.character(ModsExSem$SemanticCoherence))
 
 ModsExSem
-write.csv(ModsExSem, "./outputs/ModelsEx_Sem.csv")
-
-ModsExSem <- read.csv("./outputs/ModelsEx_Sem.csv")[c(3:5)]
-# 
-# # colnames(sentExSem)<-c("K","Exclusivity", "SemanticCoherence", "Model")
-# # ModsExSem <- rbind(ModsExSem[,c(2:5)],sentExSem)
-# Mods
 
 options(repr.plot.width=7, repr.plot.height=7, repr.plot.res=100)
 
@@ -274,7 +267,6 @@ metricddf44 <- data.frame(matrix(unlist(metricddf44), nrow = 5, byrow=TRUE))
 colnames(metricddf44)<-c("Heldout log likelihood","Exclusivity", 
                        "SemanticCoherence", "Model")
 
-write.csv(metricddf44, "./outputs/metrics44.csv")
 
 
 # plot exclusvity 
@@ -308,7 +300,6 @@ metricddf9 <- data.frame(matrix(unlist(metricddf9), nrow = 5, byrow=TRUE))
 colnames(metricddf9)<-c("Heldout log likelihood","Exclusivity", 
                         "SemanticCoherence", "Model")
 
-write.csv(metricddf9, "./outputs/metrics9.csv")
 
 
 # plot exclusvity 

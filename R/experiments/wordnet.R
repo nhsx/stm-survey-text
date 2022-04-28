@@ -1,4 +1,5 @@
 #### Using WordNet #####
+#' Explores the use of hypernyms, hyponyms and synonyms from WordNet package.
 
 ## Installation 
 # download jre and jdk 
@@ -19,15 +20,6 @@ getDict()
 getFilterTypes()
 
 
-### Plan 
-# for word in list 
-# gettermfilter("exact match")
-# get term --> get synonyms as list 
-# option to expand search terms with synonyms 
-# text search 
-## repeat with synsets
-## compare results
-
 # ! - antonym, @ - hypernym, & - similar(adjectives only) ~ - hyponym
 
 
@@ -40,52 +32,6 @@ getSynonyms(terms[[1]])
 
 # option b
 syn <- synonyms("spouse", "NOUN")
-
-extendterms <-list()
-#list of synonyms in vocab
-for (el in syn){
-  if(el %in% stmdata$vocab){
-    print(el)
-    extendterms[[length(extendterms) + 1]] <- el}
-}
-
-## list of words 
-
-extendTerms <- function (string){
-  synonymlist <- list()
-  
-  for (i in string){
-  # print(i)
-  #print(synonyms(i, "NOUN"))
-    syn <- unlist(synonyms(i, "NOUN"))
-    synonymlist[[length(synonymlist) + 1]] <- syn}
-  
-  print(paste("synonyms", "i", synonymlist))
-  extendterms <-list()
-  
-  for (el in synonymlist){
-    if(el %in% stmdata$vocab){
-      print(el)
-      extendterms[[length(extendterms) + 1]] <- el}
-  }
-  return(extendterms)
-}
-
-
-extendTerms(teststring)
-
-searchtext <- function(df, terms){
-  
-  for (i in c(1:length(terms))){
-    rows <- grep(terms[[i]], df$feedback, ignore.case =TRUE)
-  }
-  
-  results <- df[rows,]
-  return(results)
-}
-
-# search data with extended list of terms
-tempdf <- searchtext(data, extendterms)
 
 
 teststring <- c("staff", "spouse", "cancer")
@@ -136,9 +82,9 @@ sapply(related2, getWord)
 related3 <- getRelatedSynsets(related[[1]], "@")
 sapply(related3, getWord)
 
-## get the hyponymns
-# examples 
 
+
+## get the hyponymns
 filter <- getTermFilter("ExactMatchFilter", "medical practitioner", TRUE)
 terms <- getIndexTerms("NOUN", 1, filter)
 synsets <- getSynsets(terms[[1]])
@@ -154,5 +100,4 @@ hypon <- unlist(lapply(related, getWord))
 for (el in hypon){
   if(el %in% stmdata$vocab){print(el)}
 }
-
 

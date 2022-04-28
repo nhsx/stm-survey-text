@@ -1,20 +1,20 @@
 ## Model Selection ####
 
-#' Using the processed data from main.R 
-#' Searchk function is usedto selection the model with the optimal number of topics. 
+#' Using the processed data from `preprocess.R` 
+#' SearchK function is used to selection the model with the optimal number of topics. 
 #' To visualise the models using stminsights, the following are included in the saved 
-#' file stm_modelselection.RData': 
+#' file `stm_modelselection.RData`: 
 #'     out - a list of the data to produce the model (documents , vocab, meta)
 #'     stm model - stm model 
 #'     estimateEffects - the stm effects
-#'  runinsights() is generates an interactive dashboard in browser to visualise stm outputs. 
+#' 
+#' runinsights() generates an interactive dashboard in browser to visualise stm outputs. 
 #'
-#' To compare the selected model the semantic coherence and exclusivity scores are plotted.
-#'  
+#' To compare the selected model the semantic coherence and exclusivity scores are plotted.  
 #' The selected model is used to label the text with most and second most probable topics. 
 
-source("./R/main/libraries.R")
-source("./R/main/preprocess.R")
+source("~/nhsx/stmnhsx/R/main/libraries.R")
+source("~/nhsx/stmnhsx/R/main/preprocess.R")
 
 
 set.seed(123)
@@ -30,7 +30,7 @@ system.time(kresult <- searchK(out$documents, out$vocab, K, data=out$meta, max.e
 plot(kresult)
 
  
-# Evaluating the best models but on k selected from searchk
+# Evaluating the best models based on k selected from searchk
 
 model20 <-stm(documents = out$documents,
               vocab = out$vocab,
@@ -99,8 +99,7 @@ run_stminsights()
 
 ### Plot semantic coherence vs exclusivity #### 
 # The semantic coherence score and exclisivity score the topics in each model
-# is plotted to compare the models'
-#performances.
+# is plotted to compare the models' performances.
 
 M20ExSem<-as.data.frame(cbind(c(1:20),exclusivity(model20), 
                               semanticCoherence(model=model20,
@@ -137,15 +136,15 @@ plotexcoer
 
 
 ###  Dataframe of text with metadata, and labelled with topics. ####
+# The most and second most probable topics for each each text is added as a new
+# column to the dataframe. 
 
-# to get the topic number of the most and second most probable topic for each row
 labeldf <- function(model, data, k){
   stmdf <- stm::make.dt(model, meta=data)
   stmdf$`Most Probable Topic` <- apply(stmdf[,2:k], 1, 
                                        function(x){ which(x == sort(x, decreasing = TRUE)[1])})
   stmdf$`Second Most Probable Topic` <- apply(stmdf[,2:k], 1,
                                               function(x){ which(x == sort(x, decreasing = TRUE)[2])})
-  
   return(stmdf)
 }
 

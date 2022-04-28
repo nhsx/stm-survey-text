@@ -1,43 +1,30 @@
-#install packages ####
-library(here)
-library(tidyverse)
-#install.packages("spacyr")
-library("spacyr")
+#### Sentiment Analysis ####
+#' This file contains the code to explore sentiment analysis libraries in R. The
+#' The sentiment analysis libraries are: VADER, SentimentAnalysis, Tidyverse -
+#' Affin, and NRC valence.
+#' 
 
-# This is only needed the first time you use spacy
-#spacy_install() # installs spaCy in a conda environment. 
-                # this creates a standalone conda enviroment including python executable
-spacy_initialize(model = "en_core_web_sm") # initialise en language model 
+# Load raw data ####
 
-# When you do not need the connection to spaCy any longer, you can remove the 
-# spaCy object by calling the spacy_finalize() function.
-spacy_finalize()
-
-#### Load data ####
-
-df <- read_csv("C:/Users/a-lin/Documents/nhsx/preprocessing/data/text_data.csv")
+df <- read_csv("~/data/text_data.csv")
 df1 <- df
 
-### VADER ####
-#install.packages("vader")
+# VADER ####
 library(vader)
 #example
-get_vader("This book is horrible, but I love it.") 
+get_vader("Doctor listened & made me feel comfortable") 
 
-vader_df() # function runs vader over series of text and produce results in a dataframe 
 
-# on raw data 
+# function runs vader over series of text and produce results in a dataframe 
 vader_sa <- vader_df(df$feedback[c(50:55)])
 
-# on processed data - TO DO 
-tokens <- read.csv( )
 
 ### SentimentAnalysis ####
 install.packages("SentimentAnalysis")
 library(SentimentAnalysis)
 
 # Analyze a single string to obtain a binary response (positive / negative)
-sentiment <- analyzeSentiment("Yeah, this was a great soccer game of the German team!")
+sentiment <- analyzeSentiment("Doctor listened & made me feel comfortable")
 convertToBinaryResponse(sentiment)$SentimentGI
 
 sentiment <- analyzeSentiment("This book is horrible, but I love it.")
@@ -60,7 +47,6 @@ compareToResponse(sentiment, response) # response being the gold standard
 
 # VADER SA is most similar to the sentiment QDAP  dictionary
 
-
 #### Tidytext ####
 library(tidytext)
 library(dplyr)
@@ -74,21 +60,15 @@ maketextdf <- function(df){
   return(wordsdf)
 }
 
-
 maketextdf(df$feedback)
-
-
-# textdf <- tibble(comment = df$feedback, text = df$feedback)
-# textdf <- unnest_tokens(textdf, word, comment) 
-# worddf <- textdf %>% count(word) %>% arrange(desc(n))
 
 wordsdf <- inner_join(textdf, worddf, by= "word")
 wordsdf
+
 # # Need to download the text dictionaries to use afinn or nrc
 # install.packages("textdata") #need to install to use the vocabulary lexicons. 
 #get_sentiments("afinn")
 #get_sentiments("nrc")
-
 
 
 affinsent <- function(df){
@@ -157,8 +137,6 @@ sa_joined <- inner_join(sa_joined, affin_sa, by= "text")
 sa_joined <- inner_join(sa_joined, nrc_sa, by= "text")
 
 sa_joined
-
-write.csv(sa_joined, "./data/outputs/sentiment_df.csv")
 
 df <- df1[c(100:300),] 
 
@@ -300,10 +278,12 @@ vader_sent2 %>% count(text, compound, sort = TRUE) %>%
 # to lower
 # n't = true 
 
-#' @param incl_nt defaults to T, indicates whether you wish to incl n't contractions (e.g., can't) in negation analysis
-#' @param neu_set defaults to T, indicates whether you wish to count neutral words in calculations
+#' @param incl_nt defaults to T, indicates whether you wish to incl n't
+#'   contractions (e.g., can't) in negation analysis
+#' @param neu_set defaults to T, indicates whether you wish to count neutral
+#'   words in calculations
 #' @importFrom tm stopwords
-#' 
+#'   
 
 lowertext <- train_set$feedback[c(1:1000)]
 lowertext <- tolower(lowertext)
