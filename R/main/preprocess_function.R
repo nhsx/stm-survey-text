@@ -25,7 +25,7 @@ prep_dataframe <- function(df, filter_sent = FALSE){
   df$organization <- as.factor(df$organization)
   df$question <- as.factor(df$question)
   df$criticality <- as.numeric(df$criticality)
-  df$Sentiment <- as.numeric(df$sentiment)
+  df$sentiment <- as.numeric(df$sentiment)
   
   if (filter_sent == TRUE){
     df <- df[(df$Sentiment > 0.05) | (df$Sentiment < -0.05),] 

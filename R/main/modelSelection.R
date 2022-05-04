@@ -13,8 +13,8 @@
 #' To compare the selected model the semantic coherence and exclusivity scores are plotted.  
 #' The selected model is used to label the text with most and second most probable topics. 
 
-source("~/nhsx/stmnhsx/R/main/libraries.R")
-source("~/nhsx/stmnhsx/R/main/preprocess.R")
+source("./R/main/libraries.R")
+source("./R/main/preprocess.R")
 
 
 set.seed(123)
@@ -36,7 +36,7 @@ model20 <-stm(documents = out$documents,
               vocab = out$vocab,
               data = out$meta,
               K = 20,
-              prevalence=~question+organization+criticality+Sentiment,
+              prevalence=~question+organization+criticality+sentiment,
               init = "Spectral",
               max.em.its = 50,
               verbose=FALSE)
@@ -45,7 +45,7 @@ model25<-stm(documents = out$documents,
              vocab = out$vocab,
              data = out$meta,
              K = 25,
-             prevalence=~question+organization+criticality+Sentiment,
+             prevalence=~question+organization+criticality+sentiment,
              init = "Spectral",
              max.em.its = 50,
              verbose=FALSE)
@@ -54,11 +54,10 @@ model30<-stm(documents = out$documents,
              vocab = out$vocab,
              data = out$meta,
              K = 30,
-             prevalence=~question+organization+criticality+Sentiment,
+             prevalence=~question+organization+criticality+sentiment,
              init = "Spectral",
              max.em.its = 50,
              verbose=FALSE)
-
 
 
 ## Find effect estimates for each model. 
