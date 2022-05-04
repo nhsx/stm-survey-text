@@ -112,7 +112,6 @@ convert_to_stm <- function(dtm, docva){
   return(out)
 }
 
-
 sentAnalysis <- function(x, df){
   #' @param x is the column with the column with the text
   #' @param df is the dataframe to add sentiment labels to 

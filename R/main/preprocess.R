@@ -35,7 +35,6 @@ train_set <- data[-sample, ]
 
 train_set <- sentAnalysis(train_set$feedback, train_set)
 
-
 write.csv(train_set, "./data/trainsetwithsentiment.csv")
 
 # Saved sentiment score. 
