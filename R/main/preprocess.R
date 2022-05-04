@@ -1,8 +1,8 @@
 ### Data pre-processing ###
 #' This file load and prepares the data to be used by stm package. 
 
-source("~/nhsx/stmnhsx/R/main/libraries.R")
-source("~/nhsx/stmnhsx/R/main/preprocess_function.R")
+source("./R/main/libraries.R")
+source("./R/main/preprocess_function.R")
 
 ### Load Data into R ####
 path <- "./data/text_data.csv"
