@@ -29,7 +29,7 @@ Launch the `stmnhsx.Rproj` file in a suitable IDE (e.g. RStudio).
 The required packages are stored in `libraries.r`.  Currently `main.r` sources this module and will automatically install any missing packages!
 
 # Running the code
-The folder [`main`](./R/main/) contains the core code for the stm analysis and visualisation. The folder [`experiments`](./R/experiments/) contains exploratory code used in additonal experiments in this project. To run the main code:
+The folder [`R/main`](./R/main/) contains the core code for the stm analysis and visualisation. The folder [`R/experiments`](./R/experiments/) contains exploratory code used in additonal experiments in this project. To run the main code:
 1. Run `preprocess.R` to load and prepare the data for the STM model.  This includes text-preprocessing of the text (removing punctuation and digits, stemming, tokenisation etc.), sentiment analysis and converting it to an stm data format. 
 2. Run `modelSelection.R ` to run the STM on the data and determine the model with the best performance on the data. The number of topics the model is to look for can be determined by the user in the file. This file will series of outputs to evaluate the models. 
 3. Run `modelVis.Rmd` to further visualise a model interactively and conduct text search on the labeled data. 
