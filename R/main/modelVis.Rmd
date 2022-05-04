@@ -80,17 +80,6 @@ sageLabels(model25)
 findThoughts(model25, stmdata$meta$feedback)
 ```
 
-Using `findTopics` topics can be searched for a list of search terms specified by the user. This returns the number of topics and the topic that contains words in the list. 
-This method prompts the user using a pop up box. 
-
-```{r}
-user.input <- dlgInput("Terms to search for (separate by a comma):", Sys.info()["user"])$res
-
-findlist <- strsplit(user.input, ",")
-#print(findlist[[1]])
-findTopic(model25, findlist[[1]]) 
-```
-
 
 
 # Visualise effects
@@ -143,5 +132,7 @@ print(paste("Most prevalent topic is Topic", names(which.max(table(viewdf$`Most 
 
 barplot(table(viewdf$`Most Probable Topic`), main = "Count of most probable topic", xlab = "Topic", ylab = "Count")
 barplot(table(viewdf$`Second Most Probable Topic`), main = "Count of second most probable topic", xlab = "Topic", ylab = "Count")
+barplot(table(viewdf$criticality), main = "Count of criticality", xlab = "criticality", ylab = "Count")
+barplot(table(viewdf$organization), main = "Count of organisation", xlab = "Organisation", ylab = "Count")
 hist(viewdf$Sentiment, main= "Distribution of Sentiment")
 ```
