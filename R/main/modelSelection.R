@@ -66,19 +66,19 @@ model30<-stm(documents = out$documents,
 question20effect <- estimateEffect(c(1:20) ~ question, model20, out$meta)
 organisation20effect <- estimateEffect(c(1:20) ~ organization, model20, out$meta)
 criticality20effect <- estimateEffect(c(1:20) ~ criticality, model20, out$meta)
-sentiment20effect <- estimateEffect(c(1:20) ~ Sentiment, model20, out$meta)
+sentiment20effect <- estimateEffect(c(1:20) ~ sentiment, model20, out$meta)
 
 # 25 topics
 question25effect <- estimateEffect(c(1:25) ~ question, model25, out$meta)
 organisation25effect <- estimateEffect(c(1:25) ~ organization, model25, out$meta)
 criticality25effect <- estimateEffect(c(1:25) ~ criticality, model25, out$meta)
-sentiment25effect <- estimateEffect
+sentiment25effect <- estimateEffect(c(1:25) ~ sentiment, model25, out$meta)
 
 # 30 topics
 question25effect <- estimateEffect(c(1:30) ~ question, model30, out$meta)
 organisation25effect <- estimateEffect(c(1:30) ~ organization, model30, out$meta)
 criticality25effect <- estimateEffect(c(1:30) ~ criticality, model30, out$meta)
-sentiment25effect <- estimateEffect(c(1:30) ~ Sentiment, model30, out$meta)
+sentiment25effect <- estimateEffect(c(1:30) ~ sentiment, model30, out$meta)
 
 
 ## Save model and effect data
