@@ -25,7 +25,7 @@ prep_dataframe <- function(df, filter_sent = FALSE){
   df$organization <- as.factor(df$organization)
   df$question <- as.factor(df$question)
   df$criticality <- as.numeric(df$criticality)
-  df$Sentiment <- as.numeric(df$Sentiment)
+  df$Sentiment <- as.numeric(df$sentiment)
   
   if (filter_sent == TRUE){
     df <- df[(df$Sentiment > 0.05) | (df$Sentiment < -0.05),] 
@@ -107,7 +107,7 @@ convert_to_stm <- function(dtm, docva){
   dtm.new   <- dtm[rowTotals> 0, ]
   docva <- docva[rowTotals> 0, ] 
   # dtm.new <- dfm(dtm.new)
-  out <- convert(dtm.new, to = "stm", docvars = docva)
+  out <-quanteda::convert(dtm.new, to = "stm", docvars = docva)
   out <- prepDocuments(out$documents, out$vocab, out$meta)
   return(out)
 }
@@ -128,6 +128,6 @@ sentAnalysis <- function(x, df){
   
   newdataset1["sentiment"] <- as.numeric(filteredsentiment$compound)
   
-  return(df)
+  return(newdataset1)
 }
 
