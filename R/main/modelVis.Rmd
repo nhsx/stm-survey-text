@@ -134,5 +134,5 @@ barplot(table(viewdf$`Most Probable Topic`), main = "Count of most probable topi
 barplot(table(viewdf$`Second Most Probable Topic`), main = "Count of second most probable topic", xlab = "Topic", ylab = "Count")
 barplot(table(viewdf$criticality), main = "Count of criticality", xlab = "criticality", ylab = "Count")
 barplot(table(viewdf$organization), main = "Count of organisation", xlab = "Organisation", ylab = "Count")
-hist(viewdf$Sentiment, main= "Distribution of Sentiment")
+hist(viewdf$sentiment, main= "Distribution of Sentiment")
 ```
