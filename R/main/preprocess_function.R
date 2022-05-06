@@ -28,7 +28,7 @@ prep_dataframe <- function(df, filter_sent = FALSE){
   df$sentiment <- as.numeric(df$sentiment)
   
   if (filter_sent == TRUE){
-    df <- df[(df$Sentiment > 0.05) | (df$Sentiment < -0.05),] 
+    df <- df[(df$sentiment > 0.05) | (df$sentiment < -0.05),] 
   } else {
     df <- df
   }
@@ -107,7 +107,10 @@ convert_to_stm <- function(dtm, docva){
   dtm.new   <- dtm[rowTotals> 0, ]
   docva <- docva[rowTotals> 0, ] 
   # dtm.new <- dfm(dtm.new)
-  out <-quanteda::convert(dtm.new, to = "stm", docvars = docva)
+  out <- quanteda::convert(dtm.new, to = "stm", docvars = docva)
+  out$meta <- out$meta[complete.cases(out$meta),]
+  out$documents <- out$documents[complete.cases(out$meta)]
+  print("Data contained missing values... removing now....")
   out <- prepDocuments(out$documents, out$vocab, out$meta)
   return(out)
 }

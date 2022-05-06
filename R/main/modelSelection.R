@@ -16,7 +16,6 @@
 source("./R/main/libraries.R")
 source("./R/main/preprocess.R")
 
-
 set.seed(123)
 
 # Data used for stm 
@@ -25,6 +24,8 @@ out <- list(documents = stmdata$documents,
             meta = stmdata$meta)
 
 # searchK to find models with k number of topics that performs the best.
+# max.em.its will need to be changed depending on dataset as some models will
+# need more than 50 iterations to converge.
 K <- c(5,10,15,20,25,30,35,40,45,50)
 system.time(kresult <- searchK(out$documents, out$vocab, K, data=out$meta, max.em.its = 50))
 plot(kresult)
@@ -38,7 +39,7 @@ model20 <-stm(documents = out$documents,
               K = 20,
               prevalence=~question+organization+criticality+sentiment,
               init = "Spectral",
-              max.em.its = 50,
+              max.em.its = 200,
               verbose=FALSE)
 
 model25<-stm(documents = out$documents,
@@ -47,7 +48,7 @@ model25<-stm(documents = out$documents,
              K = 25,
              prevalence=~question+organization+criticality+sentiment,
              init = "Spectral",
-             max.em.its = 50,
+             max.em.its = 200,
              verbose=FALSE)
 
 model30<-stm(documents = out$documents,
@@ -56,7 +57,7 @@ model30<-stm(documents = out$documents,
              K = 30,
              prevalence=~question+organization+criticality+sentiment,
              init = "Spectral",
-             max.em.its = 50,
+             max.em.its = 200,
              verbose=FALSE)
 
 
@@ -97,8 +98,9 @@ run_stminsights()
 
 
 ### Plot semantic coherence vs exclusivity #### 
-# The semantic coherence score and exclisivity score the topics in each model
-# is plotted to compare the models' performances.
+# The semantic coherence score and exclisivity score the topics in each model is
+# plotted to compare the models' performances. We use the exclusivity function
+# and semanticCoherence function from stm package.
 
 M20ExSem<-as.data.frame(cbind(c(1:20),exclusivity(model20), 
                               semanticCoherence(model=model20,
@@ -139,6 +141,7 @@ plotexcoer
 # column to the dataframe. 
 
 labeldf <- function(model, data, k){
+  # k - the number of topics in the model
   stmdf <- stm::make.dt(model, meta=data)
   stmdf$`Most Probable Topic` <- apply(stmdf[,2:k], 1, 
                                        function(x){ which(x == sort(x, decreasing = TRUE)[1])})
