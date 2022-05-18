@@ -27,3 +27,5 @@ library(igraph) # version 1.2.6
 
 library(stminsights)  # version 0.4.1
 library(svDialogs)  # version 1.0.3
+
+

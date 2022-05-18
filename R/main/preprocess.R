@@ -1,11 +1,16 @@
 ### Data pre-processing ###
 #' This file load and prepares the data to be used by stm package. 
 
-source("./R/main/libraries.R")
-source("./R/main/preprocess_function.R")
+#source("./R/main/libraries.R")
+#source("./R/main/preprocess_function.R")
+
+source("~/Github/stm-survey-text-1/R/main/libraries.R")
+source("~/Github/stm-survey-text-1/R/main/preprocess_function.R")
 
 ### Load Data into R ####
-path <- "./data/text_data.csv"
+#path <- "./data/text_data.csv"
+#path <- "~/Github/stm-survey-text-1/data/text_data.csv"
+path <- "/Users/paul.carroll/Desktop/DHCPCoded2.csv"
 data <- read_csv(path)
 
 # Summary statistics for the data  
@@ -16,13 +21,13 @@ summary(data)
 data[rowSums(is.na(data)) > 0, ]
 
 # Summary of text data length
-text_length(data$feedback)
+text_length(data$Response)
 
 
 # Split data training set and test set. The test set is retained to validate the
 # method at the end of development.
 set.seed(1)
-sample <- sample(nrow(data), 1030)
+sample <- sample(nrow(data), 500)
 test_set <- data[sample, ]
 train_set <- data[-sample, ]
 
@@ -33,9 +38,10 @@ train_set <- data[-sample, ]
 # following code. This can take a long time, so the sentiment score has been
 # saved and can be read in using the following code (commented out).
 
-train_set <- sentAnalysis(train_set$feedback, train_set)
+train_set <- sentAnalysis(train_set$Response, train_set)
 
-write.csv(train_set, "./data/trainsetwithsentiment.csv")
+write.csv(train_set,"/Users/paul.carroll/Github/stm-survey-text-1/data/trainsetwithsentiment.csv")
+#write.csv(train_set, "./data/trainsetwithsentiment.csv")
 
 # Saved sentiment score. 
 # train_set <- read_csv("./data/trainsetwithsentiment.csv")
@@ -50,9 +56,10 @@ write.csv(train_set, "./data/trainsetwithsentiment.csv")
 
 train_set <- prep_dataframe(train_set)
 
+
 # The feedback responses ("feedback") is cleaned and pre-processed to be used
 # for the topic modelling. A corpus of is generated and the metadata is
-# re-asscoiated with the text The text is made lower case, contractions, such as
+# re-associated with the text The text is made lower case, contractions, such as
 # "won't", are expanded, digits and punctuation removed, stopwords removed and
 # text is tokenised. The text_cleaned object produced contains
 # text_cleaned$Tokens which is the text tokenised and text_cleaned$DocMatrix,

@@ -13,8 +13,11 @@
 #' To compare the selected model the semantic coherence and exclusivity scores are plotted.  
 #' The selected model is used to label the text with most and second most probable topics. 
 
-source("./R/main/libraries.R")
-source("./R/main/preprocess.R")
+#source("./R/main/libraries.R")
+#source("./R/main/preprocess.R")
+
+source("~/Github/stm-survey-text-1/R/main/libraries.R")
+source("~/Github/stm-survey-text-1/R/main/preprocess.R")
 
 set.seed(123)
 
@@ -26,18 +29,18 @@ out <- list(documents = stmdata$documents,
 # searchK to find models with k number of topics that performs the best.
 # max.em.its will need to be changed depending on dataset as some models will
 # need more than 50 iterations to converge.
-K <- c(5,10,15,20,25,30,35,40,45,50)
-system.time(kresult <- searchK(out$documents, out$vocab, K, data=out$meta, max.em.its = 50))
+K <- c(7)
+system.time(kresult <- searchK(out$documents, out$vocab, K, data=out$meta, max.em.its = 200))
 plot(kresult)
 
- 
+kresult$results
 # Evaluating the best models based on k selected from searchk
 
-model20 <-stm(documents = out$documents,
+model7 <-stm(documents = out$documents,
               vocab = out$vocab,
               data = out$meta,
-              K = 20,
-              prevalence=~question+organization+criticality+sentiment,
+              K = 7,
+              #prevalence=~question+organization+criticality+sentiment,
               init = "Spectral",
               max.em.its = 200,
               verbose=FALSE)
@@ -62,6 +65,12 @@ model30<-stm(documents = out$documents,
 
 
 ## Find effect estimates for each model. 
+
+# 7 topics
+question7effect <- estimateEffect(c(1:7) ~ question, model7, out$meta)
+organisation7effect <- estimateEffect(c(1:7) ~ organization, model7, out$meta)
+criticality7effect <- estimateEffect(c(1:7) ~ criticality, model7, out$meta)
+sentiment7effect <- estimateEffect(c(1:7) ~ sentiment, model7, out$meta)
 
 # 20 topics
 question20effect <- estimateEffect(c(1:20) ~ question, model20, out$meta)

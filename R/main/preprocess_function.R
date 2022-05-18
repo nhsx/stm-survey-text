@@ -1,4 +1,5 @@
-source("./R/main/libraries.R")
+#source("./R/main/libraries.R")
+source("~/Github/stm-survey-text-1/R/main/libraries.R")
 
 
 text_length <- function(data) {
@@ -15,16 +16,20 @@ text_length <- function(data) {
 prep_dataframe <- function(df, filter_sent = FALSE){
   #' removes NAs and corrects data type. 
   df <- na.omit(df) 
-  df$criticality[df$criticality < -4] <- -4
-  df$question <- str_remove_all(df$question, "[Trust ABCDQ-]")
+  #df$criticality[df$criticality < -4] <- -4
+  #df$question <- str_remove_all(df$question, "[Trust ABCDQ-]")
   
-  df$code <- as.factor(df$code) # data type set as string
-  df$label <- as.factor(df$label)
-  df$subcategory <- as.factor(df$subcategory)
-  df$feedback <- as.character(df$feedback)
-  df$organization <- as.factor(df$organization)
-  df$question <- as.factor(df$question)
-  df$criticality <- as.numeric(df$criticality)
+  #df$code <- as.factor(df$code) # data type set as string
+  #df$label <- as.factor(df$label)
+  #df$subcategory <- as.factor(df$subcategory)
+  df$Source <- as.factor(df$Source)
+  df$Stakeholder <- as.factor(df$Stakeholder)
+  #df$feedback <- as.character(df$feedback)
+  df$Response <- as.character(df$Response)
+  #df$organization <- as.factor(df$organization)
+  df$assignment <- as.factor(df$assignment)
+  #df$question <- as.factor(df$question)
+  #df$criticality <- as.numeric(df$criticality)
   df$sentiment <- as.numeric(df$sentiment)
   
   if (filter_sent == TRUE){
@@ -60,7 +65,8 @@ clean_text <- function(data, StopWords = mystopwords, mintermfreq=2, lemma = TRU
   #' Uses stopwords('en') as default but own list of stopwords can be used
   #' returns cleaned and tokenised text and document frequency matrix.
   
-  t1 <- corpus(data$feedback) 
+  #t1 <- corpus(data$feedback) 
+  t1 <- corpus(data$Response)
   docvars(t1, "doc_id") <- data$row_index
   docvars(t1) <- data
   
