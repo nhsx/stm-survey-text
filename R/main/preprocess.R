@@ -64,5 +64,5 @@ boxplot(w, xlab = "Number of Tokens", horizontal = TRUE,
         main = "Boxplot of Number of Tokens per Document")
 
 # The data is processed and can be used with stm package. The model selection
-# is done using `modelSelection.R`.
+# is done using `model.R`.
 
