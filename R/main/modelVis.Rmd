@@ -1,138 +1,43 @@
----
-title: "Visualisations_and_text_search"
-author: "Anna-Grace Linton"
-date: "1 April 2022"
-output: html_document
----
+################################################################################
+## Title: visOutputs
+## Last Update: 14/07/2022
+## Version: 1.0
+## Developer Contact: analytics-unit@nhsx.nhs.uk
+################################################################################
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo=FALSE, warning=FALSE, message=FALSE, cache=TRUE)
-```
-
-This file allows you to visualise and compare multiple models selected in the modelSelection in an interactive dashboard. 
-Data will be taken from `modelSelection.R` and `modelOutputs.R`. The latter sections of this document, allow you to search through the dataframe of labelled text. You can search for:
-- topics that contain the words inputted by the user
-- text that contains the terms inputted by the user.  
-
-```{r, load-packages}
-library(knitr)
-source("~/Github/stm-survey-text-1/R/main/libraries.R", local = knitr::knit_global())
-#source("~/nhsx/stmnhsx/R/main/modelSelection.R", local = knitr::knit_global()) 
-```
-
-```{r, load-packages}
-#knitr::read_chunk("~/nhsx/stmnhsx/R/main/modelSelection.R")
-```
-
-```{r, initalise-wordnet-dictionary, include=FALSE}
-library(wordnet)
-initDict()
-setDict("C:/Program Files (x86_64)/WordNet/2.1/dict")
-Sys.setenv(WNHOME = "C:/Program Files (x86_64/WordNet/2.1") 
-getDict()
-```
-
-```{r, functions-for-markdown, include=FALSE}
-readname <- function(prompttext) # prompt user for the text 
-{ 
-  n <- readline(prompt = prompttext)
-  return(n)
-}
-
-
-# prompt user for search terms 
-searchtext <- function(df, terms){
-  
-  for (i in c(1:length(terms))){
-    rows <- grep(terms[[i]], df$feedback, ignore.case =TRUE)
-  }
-  
-  results <- df[rows,]
-  return(results)
-}
-
-# get similar words 
-extendTerms <- function (string){
-  extendterms <- list()
-  syn <- unlist(synonyms(string, "NOUN"))
- 
-  for (el in syn){
-    if(el %in% stmdata$vocab){
-      extendterms[[length(extendterms) + 1]] <- el}
-  }
-  
-  return(unlist(extendterms))
-}
-
-```
-
-
-# Visualise topics 
-This code runs `toLDAvis` package and opens a visualisation of stm that allows the user to explore the topic/word distribution in an interactive browser. If the open.browser variable is missing, toLDA vis will lauch in R studios as an interactive plot. 
-```{r}
-stm::toLDAvis(mod = model7, docs = stmdata$documents, open.browser = interactive())
-```
-
-This code displays the topic labels for the topics using sageLabels() function. This displays the real words (as opposed to the processed words) most associated with each topic. findThoughts() then displays the most representative texts for each topic. 
-```{r, Topic labels}
-sageLabels(model7)
-
-findThoughts(model7, stmdata$meta$feedback)
-```
-
-
-
-# Visualise effects
-`stminsights` can be used to visualise the topics, topic content and estimate effect. Using use_browser = FALSE results in a pop up interactive window instead of opening in a browser.
-
-After running run_stiminsights(), an interactive webpage will open in browser. Here, load the saved .Rdata file produces from the file modelSelection.R. On the webpage you are able to view the topic contents, correlation, document distribution etc. 
-
-```{r, echo=FALSE}
-# visualise the outputs of the model using stminsights 
+# ------------ stminsights ------------------------
+# Visualise the outputs of the model using stminsights. use_browser = FALSE
+# results in a pop up interactive window instead of opening in a browser.
+#
+# In the interactive browser, load the saved .Rdata file produces from the file
+# modelSelection.R. On the webpage you are able to view the topic contents,
+# correlation, document distribution etc.
 run_stminsights() 
-```
 
+# ------------Plot semantic coherence vs exclusivity ------------
+options(repr.plot.width=7, repr.plot.height=7, repr.plot.res=100)
 
+plotexcoer <-
+  ggplot(ModsExSem, aes(SemanticCoherence, Exclusivity, color = Model)) +
+  geom_point(size = 2, alpha = 0.7) +
+  geom_text(aes(label = K), nudge_x = .05, nudge_y = .05) +
+  labs(x = "Semantic coherence",
+       y = "Exclusivity",
+       title = "Comparing exclusivity and semantic coherence")
 
-#Text Search 
-This searches the feedback comments for that mention terms asked by the user/analyst. This is done through a user prompt that asks the user for the terms to look for in the text. The user can search for multiple terms. A dataframe of the rows for comments that mentions the terms is returned.  The labeled text that is search is `data_labeled` object from `modelSelection.R` file. 
-Currently, this function is not set up for logical searches such as AND, OR and NOT. 
+plotexcoer
 
+# ------------ Visualise topics ------------------------
+# This code runs `toLDAvis` package and opens a visualisation of stm that allows 
+# the user to explore the topic/word distribution in an interactive browser. If 
+# the open.browser variable is missing, toLDA vis will lauch in R studios as an 
+# interactive plot. 
+stm::toLDAvis(mod = model9, docs = stmdata$documents, open.browser = interactive())
 
-```{r}
-user.input <- dlgInput("Terms to search for (separate by a comma):", Sys.info()["user"])$res
-# print(user.input)
-
-searchterms <- strsplit(user.input, ", ")
-print(searchterms[[1]])
-```
-
-```{r}
-user.similar <- dlgInput("Would you like to look for similar words? (yes/no)", Sys.info()["user"])$res
-user.similar <- tolower(user.similar)
-
-if (user.similar == "yes"){
-  for (word in searchterms[[1]]){
-    sim <- extendTerms(word)
-    searchterms[[length(searchterms) + 1]] <- sim}
-} else {searchterms}
-
-```
-
-
-To view the resulting dataframe
-```{r}
-viewdf <- searchtext(data_labeled, searchterms[[1]]) 
-print(paste("There are", length(viewdf$feedback), "results for this search."))
-View(viewdf)
-```
-
-```{r, fig.show="hold"}
-print(paste("Most prevalent topic is Topic", names(which.max(table(viewdf$`Most Probable Topic`)))))
-
-barplot(table(viewdf$`Most Probable Topic`), main = "Count of most probable topic", xlab = "Topic", ylab = "Count")
-barplot(table(viewdf$`Second Most Probable Topic`), main = "Count of second most probable topic", xlab = "Topic", ylab = "Count")
-barplot(table(viewdf$criticality), main = "Count of criticality", xlab = "criticality", ylab = "Count")
-barplot(table(viewdf$organization), main = "Count of organisation", xlab = "Organisation", ylab = "Count")
-hist(viewdf$sentiment, main= "Distribution of Sentiment")
-```
+# ------------ Topic Labels ------------------------
+# This code displays the topic labels for the topics using sageLabels() 
+# function. This displays the real words (as opposed to the processed words) 
+# most associated with each topic. findThoughts() then displays the most 
+# representative texts for each topic. 
+sageLabels(model9)
+findThoughts(model9, stmdata$meta$Response)
