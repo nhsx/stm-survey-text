@@ -1,13 +1,13 @@
 #### EVALUATIONS #####
 # Comparing the effects of ngrams, sentiment and modified pre-processing. 
 
-source("./src/preprocess_function.R") # preprocessing functions
-source("./src/libraries.R")
-
+source(here("R","main","preprocess.R")) # preprocessing functions
+source(here("R","main","libraries.R"))
 
 ## Load data
-path <- "./data/text_data.csv"
-data <- read_csv(path)
+file <- "text_data.csv"                                                         ## USER INPUT
+### Load Data into R ####
+data <- read_csv(here("data", file))
   
 set.seed(1)
 sample <- sample(nrow(data), 1030)
