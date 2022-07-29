@@ -45,7 +45,7 @@ data <- data %>% rename(Response = feedback)                                    
 prev <- c(substitute(criticality),substitute(organization),substitute(question))## USER INPUT
 
 # Option for additional user set high freq words to remove alongside stop words
-highFreq <- c("staff", "helpful", "care", "nothing", "xxxx")                    ## USER INPUT
+# highFreq <- c("staff", "helpful", "care", "nothing", "xxxx")                    ## USER INPUT
 
 # iterations will need to be changed depending on the dataset as some models 
 # will need more than 50 iterations to converge.

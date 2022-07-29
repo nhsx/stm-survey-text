@@ -10,6 +10,12 @@ sapply(data, class)
 summary(data)
 
 #stopwords
+
+if(!exists("highFreq")){
+  
+  highFreq <- NULL
+}
+
 mystopwords <- c(stopwords('en'), highFreq)
 
 # Idenitfy columns that contain missing values, then idenitfy the rows with
