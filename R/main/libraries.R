@@ -32,7 +32,7 @@ callLib <- function(){
   library(servr) #  version 0.2.4
   library(LDAvis) # version 0.3.2
   library(svDialogs)  # version 1.0.3
-  update.packages()
+  # update.packages()
 }
 
 
