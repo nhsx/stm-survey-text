@@ -6,7 +6,7 @@
 
 # Load raw data ####
 
-df <- read_csv("~/data/text_data.csv")
+df <- read_csv(here::here("data", "text_data.csv"))
 df1 <- df
 
 # VADER ####
