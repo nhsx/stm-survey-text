@@ -20,7 +20,7 @@ vader_sa <- vader_df(df$feedback[c(50:55)])
 
 
 ### SentimentAnalysis ####
-install.packages("SentimentAnalysis")
+# install.packages("SentimentAnalysis")
 library(SentimentAnalysis)
 
 # Analyze a single string to obtain a binary response (positive / negative)
