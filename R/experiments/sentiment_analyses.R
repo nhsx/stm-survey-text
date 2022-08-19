@@ -60,9 +60,11 @@ maketextdf <- function(df){
   return(wordsdf)
 }
 
-maketextdf(df$feedback)
+wordsdf <- maketextdf(df$feedback)
 
-wordsdf <- inner_join(textdf, worddf, by= "word")
+textdf <- maketextdf(train_set$feedback)
+
+wordsdf <- inner_join(textdf, wordsdf, by= "word")
 wordsdf
 
 # # Need to download the text dictionaries to use afinn or nrc
