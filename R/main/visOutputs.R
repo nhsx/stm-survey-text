@@ -9,8 +9,8 @@
 # Visualise the outputs of the model using stminsights. use_browser = FALSE
 # results in a pop up interactive window instead of opening in a browser.
 #
-# In the interactive browser, load the saved .Rdata file produces from the file
-# modelSelection.R. On the webpage you are able to view the topic contents,
+# In the interactive browser, load the saved .Rdata file produced from the file
+# main.R. On the webpage you are able to view the topic contents,
 # correlation, document distribution etc.
 run_stminsights() 
 

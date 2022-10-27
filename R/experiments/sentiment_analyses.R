@@ -6,7 +6,7 @@
 
 # Load raw data ####
 
-df <- read_csv("~/data/text_data.csv")
+df <- read_csv(here::here("data", "text_data.csv"))
 df1 <- df
 
 # VADER ####
@@ -20,7 +20,7 @@ vader_sa <- vader_df(df$feedback[c(50:55)])
 
 
 ### SentimentAnalysis ####
-install.packages("SentimentAnalysis")
+# install.packages("SentimentAnalysis")
 library(SentimentAnalysis)
 
 # Analyze a single string to obtain a binary response (positive / negative)
@@ -60,9 +60,11 @@ maketextdf <- function(df){
   return(wordsdf)
 }
 
-maketextdf(df$feedback)
+wordsdf <- maketextdf(df$feedback)
 
-wordsdf <- inner_join(textdf, worddf, by= "word")
+textdf <- maketextdf(train_set$feedback)
+
+wordsdf <- inner_join(textdf, wordsdf, by= "word")
 wordsdf
 
 # # Need to download the text dictionaries to use afinn or nrc

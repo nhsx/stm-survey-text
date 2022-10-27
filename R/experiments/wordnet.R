@@ -12,8 +12,9 @@ library("wordnet")
 
 # initalise wordnet dictionary
 initDict()
-setDict("C:/Program Files (x86)/WordNet/2.1/dict")
-Sys.setenv(WNHOME = "C:/Program Files (x86)/WordNet/2.1") 
+
+# set this value if you haven't already. See the README for more
+# Sys.setenv(WNHOME = "C:/Program Files (x86)/WordNet/2.1") 
 getDict()
 
 
