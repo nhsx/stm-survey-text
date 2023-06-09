@@ -61,7 +61,7 @@ To install WordNet, you can download the executable from  can be downloaded from
 
 The folder [`R/main/`](./R/main/) contains the core code for the stm analysis and visualisation. The folder [`R/experiments/`](./R/experiments/) contains exploratory code used in additonal experiments in this project. To run the main code:
 
-Update `main.R` User Inputs for the specific task and then run.  Suggest running single sections at a time.  The code starts off by loading the data before text-preprocessing of the text (removing punctuation and digits, stemming, tokenisation etc.), sentiment analysis and converting it to an stm data format.  The best STM models are then determined by running a search over the number of topics.  The outputs are then visualised in static and interactive ways.  Finally, the last section of code allows an interactive term serach capability.
+Update `main.R` User Inputs for the specific task and then run.  Suggest running single sections at a time.  The code starts off by loading the data before text-preprocessing of the text (removing punctuation and digits, stemming, tokenisation etc.), sentiment analysis and converting it to an stm data format.  The best STM models are then determined by running a search over the number of topics.  The outputs are then visualised in static and interactive ways.  Finally, the last section of code allows an interactive term search capability.
 
 # Roadmap
 
