@@ -1,0 +1,11 @@
+site_name: stm-survey-text
+site_url: https://nhsx.github.io/stm-survey-text
+nav:
+  - Home: index.md
+  - Preprocessing and Text Analysis: preprocessing.md
+  - Structural Topic Modelling: stm.md
+  - Contact: contact.md
+
+theme: 
+  name: material
+  logo: assets/machine_learning_badge_L.png
